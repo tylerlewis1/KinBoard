@@ -1,7 +1,10 @@
 import { useNavigation } from "@react-navigation/native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { auth, db } from "../../../firebase";
 import globalstyle from "../../styles/auth/global";
 export default function Signup(){
     const nav = useNavigation();
@@ -13,7 +16,19 @@ export default function Signup(){
             alert("You must fill out all fields");
             return;
         }
-
+        try{
+            await createUserWithEmailAndPassword(auth, email, password).then((user) =>{
+                const userRef = doc(db, "users", auth.currentUser.uid);
+                setDoc(userRef, {
+                    name: name,
+                    email: email,
+                    circles: []
+                });
+            });
+        } catch(e){
+            alert("There was a error");
+            console.log(e);
+        }
     }
     return(
         <SafeAreaView>
@@ -22,19 +37,19 @@ export default function Signup(){
             <View>
                  <TextInput
                     value={name}
-                    onChange={setName}
+                    onChangeText={setName}
                     placeholder="Name"
                     style={globalstyle.txtinput}
                 />
                 <TextInput
                     value={email}
-                    onChange={setEmail}
+                    onChangeText={setEmail}
                     placeholder="Email"
                     style={globalstyle.txtinput}
                 />
                 <TextInput
                     value={password}
-                    onChange={setPassword}
+                    onChangeText={setPassword}
                     placeholder="Password"
                     style={globalstyle.txtinput}
                     secureTextEntry={true}

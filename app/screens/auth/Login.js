@@ -1,7 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { auth } from "../../../firebase";
 import globalstyle from "../../styles/auth/global";
 export default function Login(){
     const nav = useNavigation();
@@ -12,7 +14,15 @@ export default function Login(){
             alert("You must enter a user name and a password");
             return;
         }
-
+        try{
+        await signInWithEmailAndPassword(auth, email, password).then((user) => {
+            console.log(auth.currentUser.uid);
+        })
+        } catch(e){
+            console.log(e);
+            alert("There was a issue loging in");
+            return;
+        }
     }
     return(
         <SafeAreaView>
@@ -21,13 +31,13 @@ export default function Login(){
             <View>
                 <TextInput
                     value={email}
-                    onChange={setEmail}
+                    onChangeText={setEmail}
                     placeholder="Email"
                     style={globalstyle.txtinput}
                 />
                 <TextInput
                     value={password}
-                    onChange={setPassword}
+                    onChangeText={setPassword}
                     placeholder="Password"
                     style={globalstyle.txtinput}
                     secureTextEntry={true}
