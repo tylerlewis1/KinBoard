@@ -17,10 +17,11 @@ export default StyleSheet.create({
         display: "block",
         margin: "auto",
         padding: 20,
-        color: "black",
+        color: "#000000",
         borderRadius: 20,
         fontSize: 17,
-        marginBottom: 20
+        marginBottom: 20,
+        
     },
     button: {
         backgroundColor: "#2EC4B6",

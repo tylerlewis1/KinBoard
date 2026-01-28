@@ -22,7 +22,8 @@ export default function Signup(){
                 setDoc(userRef, {
                     name: name,
                     email: email,
-                    circles: []
+                    circles: [],
+                    pfp: 1
                 });
             });
         } catch(e){
@@ -32,7 +33,6 @@ export default function Signup(){
     }
     return(
         <SafeAreaView>
-            {/* <Text style={globalstyle.header}>Kin Board</Text> */}
             <Image style={globalstyle.logo} source={require("../../../assets/images/logotb.png")}/>
             <View>
                  <TextInput
@@ -40,12 +40,14 @@ export default function Signup(){
                     onChangeText={setName}
                     placeholder="Name"
                     style={globalstyle.txtinput}
+                    placeholderTextColor="black"
                 />
                 <TextInput
                     value={email}
                     onChangeText={setEmail}
                     placeholder="Email"
                     style={globalstyle.txtinput}
+                    placeholderTextColor="black"
                 />
                 <TextInput
                     value={password}
@@ -54,6 +56,7 @@ export default function Signup(){
                     style={globalstyle.txtinput}
                     secureTextEntry={true}
                     autoComplete="current-password"
+                    placeholderTextColor="black"
                 />
                 
             </View>

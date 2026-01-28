@@ -34,6 +34,7 @@ export default function Login(){
                     onChangeText={setEmail}
                     placeholder="Email"
                     style={globalstyle.txtinput}
+                    placeholderTextColor="black"
                 />
                 <TextInput
                     value={password}
@@ -42,6 +43,7 @@ export default function Login(){
                     style={globalstyle.txtinput}
                     secureTextEntry={true}
                     autoComplete="current-password"
+                    placeholderTextColor="black"
                 />
             </View>
             <TouchableOpacity 

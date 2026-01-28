@@ -4,7 +4,7 @@ import { Animated } from "react-native";
 import { userContext } from "./background/Users";
 import Login from "./screens/auth/Login";
 import Signup from "./screens/auth/Signup";
-import Dash from "./screens/main/dash";
+import Tabs from "./screens/main/tabs";
 import Loading from "./screens/other/Loading";
 export default function Index() {
   const [init, setInit] = useState(true);
@@ -41,7 +41,7 @@ export default function Index() {
   } else {
     return(  
       <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Dash" component={Dash}/>
+          <Stack.Screen name="Home" component={Tabs}/>
       </Stack.Navigator>
     )
   }
