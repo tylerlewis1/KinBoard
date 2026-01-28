@@ -59,7 +59,7 @@ export default function Account() {
                 <TouchableOpacity 
                 onPress={() => {auth.signOut()}}
                 style={[global.btn, {backgroundColor: "#FF6F61"}]}>
-                    <Text style={global.btntxt}>Signout</Text>
+                    <Text style={global.btntxt}>Sign out</Text>
                 </TouchableOpacity>
                 
                 <TouchableOpacity 
