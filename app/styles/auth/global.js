@@ -19,7 +19,7 @@ export default StyleSheet.create({
         padding: 20,
         color: "black",
         borderRadius: 20,
-        fontSize: 15,
+        fontSize: 17,
         marginBottom: 20
     },
     button: {
@@ -36,5 +36,6 @@ export default StyleSheet.create({
         fontWeight: "500",
         fontSize: 20
     }
+    
     
 });

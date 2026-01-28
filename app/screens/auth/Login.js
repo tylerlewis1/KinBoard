@@ -41,7 +41,7 @@ export default function Login(){
 
             <TouchableOpacity
                 onPress={() => {nav.navigate("Signup")}}
-            ><Text style={globalstyle.buttontxt}>Don't have a account?</Text></TouchableOpacity>
+            ><Text style={[globalstyle.buttontxt, {color: "#FF6F61"}]}>Don't have a account?</Text></TouchableOpacity>
         </SafeAreaView>
     )
 }
