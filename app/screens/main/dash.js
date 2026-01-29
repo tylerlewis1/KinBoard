@@ -26,7 +26,7 @@ export default function Dash() {
                     <Text style={style.greeting}>Hi <Text style={{color: "#2EC4B6"}}>{user.userData.name}!</Text></Text>
                 </View>
                 <View style={style.main}>
-                    <HouseHolds/>
+                    <HouseHolds userdata={user.userData}/>
                 </View>
             </View>
         </SafeAreaView>

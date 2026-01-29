@@ -14,7 +14,7 @@ export default StyleSheet.create({
     paddingLeft: wp(2.5)
    },
    greeting: {
-    fontSize: hp(5),
+    fontSize: hp(6),
     fontWeight: "bold",
     padding: wp(3)
    },

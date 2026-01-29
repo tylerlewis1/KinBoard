@@ -1,10 +1,41 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { doc, getDoc } from "firebase/firestore";
+import { useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-export default function HouseHolds(){
+import { db } from "../../../../firebase";
+import Circle from "./circle";
+export default function HouseHolds({userdata}){
+    const [circles, setCircles] = useState([]);
+    
+    console.log(userdata);
+    
+    useEffect(() => {
+        const getCircleData = async() =>{    
+            setCircles([]);
+            userdata.circles.map(async (circle) => {
+                try{
+                    console.log(circle);
+                    const circleRef = doc(db, "circles", circle);
+                    const data = await getDoc(circleRef);
+                    setCircles(prev => [...prev, data.data()]);
+                }catch(e){
+                    alert("Error getting circles");
+                    console.log(e);
+                }
+            });
+        }
+        getCircleData();
+    }, []);
+    
     return(
         <View style={style.content}>
             <Text style={style.header}>House Holds</Text>
-            <ScrollView >
+            <ScrollView style={style.btnscroll} contentContainerStyle={style.gridContainer}>
+               {circles.map((data) => {
+                return(
+                    <Circle key={data.name} name={data.name}/>
+                )
+               })}
                 <TouchableOpacity style={style.btn}>
                     <Ionicons name="add" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />
                     <Text style={style.txt}>Add Circle</Text>
@@ -29,7 +60,7 @@ const style = StyleSheet.create({
     textAlign: "center",
     fontWeight: "bold",
     marginTop: hp(1.5),
-    fontSize: wp(5)
+    fontSize: wp(4)
    },
    header: {
     fontSize: hp(4),
@@ -38,8 +69,20 @@ const style = StyleSheet.create({
    },
    btn: {
     backgroundColor: "#f0eeee",
-    width: wp(30),
+    width: wp(25),
     height: hp(20),
-    borderRadius: 20
-   }
+    borderRadius: 20,
+   },
+   btnscroll: {
+    display: "flex",
+    flexBasis: "50%",
+    flexWrap: "wrap",
+    width: wp(90),
+   },
+   gridContainer: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        gap: wp(6), 
+        justifyContent: 'flex-start',
+    },
 });

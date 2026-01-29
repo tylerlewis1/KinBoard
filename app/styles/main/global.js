@@ -39,6 +39,9 @@ export default StyleSheet.create({
    },
    container: {
       height: "80%"
+   },
+   back: {
+      paddingLeft: wp(3)
    }
     
 });

@@ -1,5 +1,7 @@
 import { userContext } from "@/app/background/Users";
 import { auth, db } from "@/firebase";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { doc, writeBatch } from "firebase/firestore";
 import { useContext } from "react";
@@ -8,6 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import global from "../../styles/main/global";
 export default function Account() {
     const user = useContext(userContext);
+    const nav = useNavigation();
     const resetpass = async() =>{
         try{
             await sendPasswordResetEmail(auth, user.userData.email).then(() =>{
@@ -44,6 +47,11 @@ export default function Account() {
 
     return(
         <SafeAreaView>
+            <TouchableOpacity
+                onPress={() => {nav.goBack()}}
+            >
+                <Ionicons name="arrow-back" size="24" style={global.back} />
+            </TouchableOpacity>
             <View style={global.container}>
 
                 <Image style={global.pfp} source={require("../../../assets/images/dpfp.png")}/>
