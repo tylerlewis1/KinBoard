@@ -11,7 +11,9 @@ export default StyleSheet.create({
         flexDirection: "row",
    },
    settings: {
-    paddingLeft: wp(2.5)
+      position: "absolute",
+      right: wp(5),
+      top: hp(3)
    },
    greeting: {
     fontSize: hp(6),
@@ -19,9 +21,62 @@ export default StyleSheet.create({
     padding: wp(3)
    },
    top: {
-    height: hp(10)
+    height: hp(10),
+    display: "flex",
+    flexDirection: "row"
    },
    main: {
-    height: hp(75)
-   }
+    height: hp(75),
+   },
+   modal: {
+      height: hp(100),
+      width: wp(100),
+      backgroundColor: "rgba(0, 0, 0, .4)",
+      zIndex: 1000
+   },
+   modalcontent: {
+      width: wp(90),
+      height: hp(30), 
+      backgroundColor: "white",
+      zIndex: 1001,
+      position: "absolute",
+      top: hp(25),
+      left: wp(5),
+      borderRadius: 20
+   },
+   form: {
+      width: wp(70),
+      height: hp(20),
+      display: "block",
+      margin: "auto"
+   },
+   input: {
+        width: wp(60),
+        backgroundColor: "#d7d7d7",
+        display: "block",
+        margin: "auto",
+        padding: 20,
+        color: "#000000",
+        borderRadius: 20,
+        fontSize: 17,
+        
+    },
+    title: {
+      fontSize: hp(3),
+      textAlign: "center"
+    },
+      button: {
+        backgroundColor: "#2EC4B6",
+        width: "80%",
+        display: "block",
+        margin: "auto", 
+        padding: 20,
+        
+        borderRadius: 20
+    },
+    buttontxt: {
+        textAlign: "center",
+        fontWeight: "500",
+        fontSize: 20
+    }
 });

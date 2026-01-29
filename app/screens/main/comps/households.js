@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { db } from "../../../../firebase";
 import Circle from "./circle";
-export default function HouseHolds({userdata}){
+export default function HouseHolds({userdata, setModalVisible}){
     const [circles, setCircles] = useState([]);
     
     console.log(userdata);
@@ -29,14 +29,14 @@ export default function HouseHolds({userdata}){
     
     return(
         <View style={style.content}>
-            <Text style={style.header}>House Holds</Text>
+            <Text style={style.header}>Circles</Text>
             <ScrollView style={style.btnscroll} contentContainerStyle={style.gridContainer}>
                {circles.map((data) => {
                 return(
                     <Circle key={data.name} name={data.name}/>
                 )
                })}
-                <TouchableOpacity style={style.btn}>
+                <TouchableOpacity style={style.btn} onPress={() => {setModalVisible(true)}}>
                     <Ionicons name="add" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />
                     <Text style={style.txt}>Add Circle</Text>
                 </TouchableOpacity>
