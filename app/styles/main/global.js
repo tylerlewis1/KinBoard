@@ -1,37 +1,44 @@
 
-import { StyleSheet } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+
+const { width, height } = Dimensions.get("window");
+const wp = (percent) => width * (percent / 100);
+const hp = (percent) => height * (percent / 100);
+
 export default StyleSheet.create({
    container: {
 
    },
    pfp: {
     borderRadius: 1000,
-    width: "200",
-    height: "200",
+    width: wp(50),
+    height: wp(50),
     display: "block",
     margin: "auto",
     marginTop: 50,
     boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
    }, 
    name: {
-    fontSize: 30,
+    fontSize: wp(5),
     textAlign: "center",
     fontWeight: "bold",
     marginTop: 20
    },
    btn: {
-    width: "80%",
-    padding: 20,
+    width: wp(80),
+    padding: 15,
     display: "block",
     margin: "auto",
-    marginTop: 30,
-    borderRadius: 20
-    
+    marginTop: hp(2),
+    borderRadius: 20,
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
    },
    btntxt: {
-    fontSize: 20,
+    fontSize: wp(5),
     textAlign: "center"
-
+   },
+   container: {
+      height: "80%"
    }
     
 });

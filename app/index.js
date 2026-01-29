@@ -4,10 +4,11 @@ import { Animated } from "react-native";
 import { userContext } from "./background/Users";
 import Login from "./screens/auth/Login";
 import Signup from "./screens/auth/Signup";
-import Tabs from "./screens/main/tabs";
+import Account from "./screens/main/account";
+import Dash from "./screens/main/dash";
 import Loading from "./screens/other/Loading";
 export default function Index() {
-  const [init, setInit] = useState(true);
+  const [init, setInit] = useState(false);
   const user = useContext(userContext);
   const Stack = createNativeStackNavigator();
   const opacity = useRef(new Animated.Value(1)).current;
@@ -41,7 +42,8 @@ export default function Index() {
   } else {
     return(  
       <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Home" component={Tabs}/>
+          <Stack.Screen name="Home" component={Dash}/>
+          <Stack.Screen name="Account" component={Account}/>
       </Stack.Navigator>
     )
   }

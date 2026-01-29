@@ -7,9 +7,9 @@ export default StyleSheet.create({
         textAlign: "center",
     },
     logo: {
-        width: "80%",
+        width: "70%",
         margin: "auto",
-        height: "40%",
+        height: "45%",
     },
     txtinput: {
         width: "80%",

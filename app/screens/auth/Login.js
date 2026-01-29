@@ -19,7 +19,10 @@ export default function Login(){
             console.log(auth.currentUser.uid);
         })
         } catch(e){
-            console.log(e);
+            if(e.code == "auth/invalid-credential"){
+                alert("invalid user name or password");
+                return;
+            }
             alert("There was a issue loging in");
             return;
         }
