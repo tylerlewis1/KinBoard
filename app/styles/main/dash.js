@@ -70,7 +70,7 @@ export default StyleSheet.create({
         width: "80%",
         display: "block",
         margin: "auto", 
-        padding: 20,
+        padding: hp(2),
         
         borderRadius: 20
     },

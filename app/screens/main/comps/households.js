@@ -55,6 +55,7 @@ const style = StyleSheet.create({
     width: wp(100),
     height: hp(90),
     padding: wp(5),
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
    },
    txt: {
     textAlign: "center",
@@ -78,11 +79,14 @@ const style = StyleSheet.create({
     flexBasis: "50%",
     flexWrap: "wrap",
     width: wp(90),
+    
+    
    },
    gridContainer: {
         flexDirection: 'row',
         flexWrap: 'wrap',
         gap: wp(6), 
         justifyContent: 'flex-start',
+        
     },
 });

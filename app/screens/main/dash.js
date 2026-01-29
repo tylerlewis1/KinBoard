@@ -20,9 +20,7 @@ export default function Dash() {
                 animationType="fade"
                 transparent={true}
                 visible={modalVisible}
-                
                 onRequestClose={() => {
-                    Alert.alert('Modal has been closed.');
                     setModalVisible(!modalVisible);
                 }}
             >
@@ -38,6 +36,10 @@ export default function Dash() {
 
                             <TouchableOpacity 
                                         style={style.button}
+                                        onPress={() => {
+                                            nav.navigate("AddCircle");
+                                            setModalVisible(false);
+                                        }}
                                         ><Text style={style.buttontxt}>Create Circle</Text></TouchableOpacity>
                         </View>
 
