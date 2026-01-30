@@ -33,6 +33,26 @@ export default StyleSheet.create({
     fontSize: wp(5),
     textAlign: "center"
    },
+   txtinput: {
+        width: "80%",
+        backgroundColor: "#c1c0c0",
+        display: "block",
+        margin: "auto",
+        padding: 20,
+        color: "#000000",
+        borderRadius: 20,
+        fontSize: 17,
+        marginBottom: 20,
+    },
+    img: {
+        width: wp(50),
+        height: wp(50),
+        display: "block",
+        margin: "auto",
+        marginBottom: hp(10),
+        marginTop: hp(10),
+        borderRadius: 100
+    }
    
     
 });

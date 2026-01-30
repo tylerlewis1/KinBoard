@@ -1,16 +1,56 @@
 import { userContext } from "@/app/background/Users";
-import { auth, db } from "@/firebase";
+import { auth, db, storage } from "@/firebase";
 import { Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { doc, writeBatch } from "firebase/firestore";
-import { useContext } from "react";
+import { doc, updateDoc, writeBatch } from "firebase/firestore";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { useContext, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import global from "../../styles/main/global";
+
 export default function Account() {
     const user = useContext(userContext);
     const nav = useNavigation();
+    const [imageUri, setImageUri] = useState();
+    const [iamgeUrl, setImageUrl] = useState();
+    const pickImg = async() =>{
+            console.log("test");
+            const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+            console.log(status);
+            if(status != "granted"){
+                alert("You must give photo permition to add images");
+                return;
+            }
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: .1,
+            })
+            saveImg(result.assets[0].uri);
+            if (!result.canceled) {
+                setImageUri(result.assets[0].uri);
+            }
+        }
+        const saveImg = async(uri) => {
+            try{
+                let res = await fetch(uri);
+                const blob = await res.blob();
+                const storageRef = ref(storage, `images/${auth.currentUser.uid}/pfp.jpg`);
+                await uploadBytes(storageRef, blob);
+                const url = await getDownloadURL(storageRef);
+                setImageUrl(url);
+                const userDoc = doc(db, "users", auth.currentUser.uid);
+                await updateDoc(userDoc, {pfp: url});
+            }catch(e){
+                console.log(e);
+                alert("There was a error saving you image");
+            }
+        }
+
     const resetpass = async() =>{
         try{
             await sendPasswordResetEmail(auth, user.userData.email).then(() =>{
@@ -33,6 +73,7 @@ export default function Account() {
     }
     const delacc = async() => {
         const userdoc = doc(db, "users", auth.currentUser.uid);
+        //images, circles
         try{
             const batch = writeBatch(db);
             batch.delete(userdoc);
@@ -53,8 +94,17 @@ export default function Account() {
                 <Ionicons name="arrow-back" size="24" style={global.back} />
             </TouchableOpacity>
             <View style={global.container}>
-
-                <Image style={global.pfp} source={require("../../../assets/images/dpfp.png")}/>
+            <TouchableOpacity
+                onPress={() => {pickImg()}}
+            >
+                {(user.userData.pfp != "")? (
+                    <Image style={global.pfp} source={{uri: user.userData.pfp}}/>
+                ): (
+                    <Image style={global.pfp} source={require("../../../assets/images/dpfp.png")}/>
+                )}
+            </TouchableOpacity>
+                
+                
                 <Text style={global.name}>{user.userData.name}</Text>
                 
                 <TouchableOpacity 

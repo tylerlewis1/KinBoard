@@ -15,7 +15,7 @@ export default function HouseHolds({userdata, setModalVisible}){
             userdata.circles.map(async (circle) => {
                 try{
                     console.log(circle);
-                    const circleRef = doc(db, "circles", circle);
+                    const circleRef = doc(db, "circles", String(circle));
                     const data = await getDoc(circleRef);
                     setCircles(prev => [...prev, data.data()]);
                 }catch(e){
@@ -25,15 +25,16 @@ export default function HouseHolds({userdata, setModalVisible}){
             });
         }
         getCircleData();
-    }, []);
+        console.log("update");
+    }, [userdata.circles]);
     
     return(
         <View style={style.content}>
             <Text style={style.header}>Circles</Text>
             <ScrollView style={style.btnscroll} contentContainerStyle={style.gridContainer}>
                {circles.map((data) => {
-                return(
-                    <Circle key={data.name} name={data.name}/>
+                return( 
+                    <Circle key={data.name} name={data.name} cover={data.cover}/>
                 )
                })}
                 <TouchableOpacity style={style.btn} onPress={() => {setModalVisible(true)}}>
