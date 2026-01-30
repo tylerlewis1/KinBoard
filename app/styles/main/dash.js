@@ -16,9 +16,10 @@ export default StyleSheet.create({
       top: hp(3)
    },
    greeting: {
-    fontSize: hp(6),
+    fontSize: hp(4),
     fontWeight: "bold",
-    padding: wp(3)
+    paddingTop: wp(6),
+    paddingLeft: wp(3)
    },
    top: {
     height: hp(10),

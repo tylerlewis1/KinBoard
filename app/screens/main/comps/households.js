@@ -34,7 +34,7 @@ export default function HouseHolds({userdata, setModalVisible}){
             <ScrollView style={style.btnscroll} contentContainerStyle={style.gridContainer}>
                {circles.map((data) => {
                 return( 
-                    <Circle key={data.name} name={data.name} cover={data.cover}/>
+                    <Circle key={data.id} name={data.name} cover={data.cover} id={data.id}/>
                 )
                })}
                 <TouchableOpacity style={style.btn} onPress={() => {setModalVisible(true)}}>

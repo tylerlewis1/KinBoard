@@ -4,6 +4,7 @@ import { Animated } from "react-native";
 import { userContext } from "./background/Users";
 import Login from "./screens/auth/Login";
 import Signup from "./screens/auth/Signup";
+import CircleDash from "./screens/circlescreens/circledash";
 import AddCircle from "./screens/editscreens/addCircles";
 import Account from "./screens/main/account";
 import Dash from "./screens/main/dash";
@@ -46,6 +47,7 @@ export default function Index() {
           <Stack.Screen name="Home" component={Dash}/>
           <Stack.Screen name="Account" component={Account}/>
           <Stack.Screen name="AddCircle" component={AddCircle}/>
+          <Stack.Screen name="CircleDash" component={CircleDash}/>
       </Stack.Navigator>
     )
   }

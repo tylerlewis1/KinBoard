@@ -14,6 +14,17 @@ export default function Dash() {
     const wp = (percent) => width * (percent / 100);
     const hp = (percent) => height * (percent / 100);
     const user = useContext(userContext);
+    const getTimeOfDay = () =>{
+        const time = new Date().getHours();
+        if(time < 12){
+            return("Good Morning");
+        } else if (time >= 12 && time < 18){
+            return("Hi");
+        } else {
+            return("Good Evening");
+        }
+    } 
+
     return(
         <SafeAreaView>
             <Modal
@@ -51,7 +62,7 @@ export default function Dash() {
             </View>
             <View style={style.content}>
                 <View style={style.top}>
-                    <Text style={style.greeting}>Hi <Text style={{color: "#2EC4B6"}}>{user.userData.name}!</Text></Text>
+                    <Text style={[style.greeting, {}]}>{getTimeOfDay()} <Text style={{color: "#2EC4B6"}}>{user.userData.name}!</Text></Text>
                      
                     <TouchableOpacity 
                         onPress={() => {nav.navigate("Account")}}

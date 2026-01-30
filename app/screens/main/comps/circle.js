@@ -1,9 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
+import { router, useNavigation } from "expo-router";
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export default function Circle({id, name, cover}) {
-    console.log(cover);
+    const nav = useNavigation();
     return(
-        <TouchableOpacity style={style.btn}>
+        <TouchableOpacity 
+            style={style.btn}
+            onPress={() => {
+               router.navigate({
+                    pathname: "/screens/circlescreens/circledash", 
+                    params: { id, name, cover }
+                });
+            }}
+        >
             <View style={{ height: hp(15)}}>
                 {(cover == "") ? (
                     <Ionicons name="home" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />    
