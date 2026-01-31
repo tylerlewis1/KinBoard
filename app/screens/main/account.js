@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { doc, updateDoc, writeBatch } from "firebase/firestore";
+import { arrayRemove, collection, doc, updateDoc, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
@@ -72,10 +72,23 @@ export default function Account() {
         ]);
     }
     const delacc = async() => {
+        const batch = writeBatch(db);
         const userdoc = doc(db, "users", auth.currentUser.uid);
         //images, circles
         try{
-            const batch = writeBatch(db);
+            const userMap = {
+                name: user.userData.name,
+                pfp: user.userData.pfp,
+                uid: auth.currentUser.uid
+            }
+            user.userData.circles.map((circleID) => {
+                const circleRef = doc(db, "circles", String(circleID));
+                const circleCollection = doc(collection(circleRef, auth.currentUser.uid));
+                batch.update(circleRef, {
+                    members: arrayRemove(userMap)
+                })
+                batch.delete(circleCollection);
+            });
             batch.delete(userdoc);
             await batch.commit();
             auth.currentUser.delete();

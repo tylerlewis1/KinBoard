@@ -3,7 +3,7 @@ import { userContext } from "@/app/background/Users";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
-import { arrayUnion, doc, writeBatch } from "firebase/firestore";
+import { arrayUnion, collection, doc, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -55,9 +55,15 @@ export default function AddCircle(){
         }
     }
     const createCircle = async() => {
+        if(name == ""){
+            alert("You must name your circle");
+            return;
+        }
         try{
             const circleDoc = doc(db, "circles", String(id));
             const userDoc = doc(db, "users", auth.currentUser.uid);
+            const homeCollection = doc(collection(circleDoc, "home"));
+            const userCollection = doc(collection(circleDoc, auth.currentUser.uid));
             const batch = writeBatch(db);
             batch.set(circleDoc, {
                 name: name,
@@ -70,6 +76,12 @@ export default function AddCircle(){
                 }],
                 created: new Date(),
                 id: id
+            });
+            batch.set(homeCollection, {
+                name: "Home"
+            });
+            batch.set(userCollection, {
+                name: user.userData.name
             });
             batch.update(userDoc, {
                 circles: arrayUnion(id)

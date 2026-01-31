@@ -29,7 +29,8 @@ export default function CircleDash(){
                 }
             }catch(e){
                 console.log(e);
-                alert("There was a error getting your circle")
+                alert("There was a error getting your circle");
+                nav.goBack();
             }
         }
         getCircleData();
@@ -43,7 +44,13 @@ export default function CircleDash(){
                     <TouchableOpacity onPress={() => {nav.goBack()}}>
                         <Ionicons name="arrow-back" size={hp(2.5)} style={style.back} />
                     </TouchableOpacity>
-                    <Image style={style.img} source={{uri: circleData?.cover}}/>   
+                    {(circleData?.cover == "")? (
+                        <Image style={style.img} source={{uri: circleData?.cover}}/>   
+                    ):(
+                        <View style={{paddingBottom: hp(6)}}></View>
+                    )}
+                        
+                    
                     <Text style={style.name}>{name}</Text>
                     <TouchableOpacity 
                         style={style.settings}

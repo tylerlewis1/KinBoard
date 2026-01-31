@@ -23,7 +23,7 @@ export default function Signup(){
                     name: name,
                     email: email,
                     circles: [],
-                    pfp: 1
+                    pfp: ""
                 });
             });
         } catch(e){
