@@ -17,7 +17,7 @@ export default function Content({selection, circleData}) {
                 {(circleData?.id)? (
                     <QRCode
                         value={String(circleData.id)}
-                        size={wp(70)} 
+                        size={wp(50)} 
                         color="black" 
                         backgroundColor="white"
                         logo={require("../../../../assets/images/logoz.png")}
@@ -65,8 +65,8 @@ const style = StyleSheet.create({
     },
     qr: {
         padding: wp(5),
-        width: wp(80),
-        left: wp(5),
+        width: wp(60),
+        left: wp(15),
         backgroundColor: "white",
         borderRadius: 20
 

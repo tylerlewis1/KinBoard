@@ -6,6 +6,7 @@ import Login from "./screens/auth/Login";
 import Signup from "./screens/auth/Signup";
 import CircleDash from "./screens/circlescreens/circledash";
 import AddCircle from "./screens/editscreens/addCircles";
+import JoinCircle from "./screens/editscreens/joinCircle";
 import Account from "./screens/main/account";
 import Dash from "./screens/main/dash";
 import Loading from "./screens/other/Loading";
@@ -47,6 +48,7 @@ export default function Index() {
           <Stack.Screen name="Home" component={Dash}/>
           <Stack.Screen name="Account" component={Account}/>
           <Stack.Screen name="AddCircle" component={AddCircle}/>
+          <Stack.Screen name="JoinCircle" component={JoinCircle}/>
           <Stack.Screen name="CircleDash" component={CircleDash}/>
       </Stack.Navigator>
     )

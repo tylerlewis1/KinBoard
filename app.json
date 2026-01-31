@@ -4,7 +4,7 @@
     "slug": "KinBoard",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/logoz.png",
     "scheme": "kinboard",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
