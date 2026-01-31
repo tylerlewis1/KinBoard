@@ -20,13 +20,31 @@ export default function NavBar({selection, setSelection, circleData}){
                 onPress={() => setSelection(auth.currentUser.uid)}
             >
                 {(user.userData?.pfp != "")? (
-                    <Image source={{uri: user.userData.pfp}} style={style.pfp} />
+                    <Image source={{uri: user.userData?.pfp}} style={style.pfp} />
                 ):(
                     <Image source={require("../../../../assets/images/dpfp.png")} style={style.pfp}/>
                 )}
             </TouchableOpacity>
             {/* Load other users */}
-                
+            {
+                circleData?.members.map((member) => {
+                    if(auth.currentUser.uid != member.uid){
+                        return(
+                            <TouchableOpacity
+                                key={member.uid}
+                                style={(selection == member.uid)? (style.btnactive):(style.btn)}
+                                onPress={() => setSelection(member.uid)}
+                            >
+                                {(member.pfp != "")? (
+                                    <Image source={{uri: member.pfp}} style={style.pfp} />
+                                ):(
+                                    <Image source={require("../../../../assets/images/dpfp.png")} style={style.pfp}/>
+                                )}
+                            </TouchableOpacity>
+                        )
+                    }
+                })
+            }
             
            
             <TouchableOpacity 

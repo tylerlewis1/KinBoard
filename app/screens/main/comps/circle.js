@@ -13,11 +13,11 @@ export default function Circle({id, name, cover}) {
                 });
             }}
         >
-            <View style={{ height: hp(15)}}>
+            <View style={{ height: hp(13)}}>
                 {(cover == "") ? (
                     <Ionicons name="home" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />    
                 ): (
-                    <Image source={{uri: cover}} style={{width: hp(10), height: hp(10), display: "block",borderRadius: 100, margin: "auto"}}/>
+                    <Image source={{uri: cover}} style={{width: hp(9), height: hp(9), display: "block",borderRadius: 100, margin: "auto"}}/>
                 )}
             </View>
             <View>

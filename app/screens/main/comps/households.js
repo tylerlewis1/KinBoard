@@ -32,6 +32,7 @@ export default function HouseHolds({userdata, setModalVisible}){
             });
         }
         getCircleData();
+        setLoading(false);
     }, [userdata.circles]);
     if(loading){
         return(

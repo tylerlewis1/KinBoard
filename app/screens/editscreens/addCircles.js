@@ -1,10 +1,11 @@
 
+import { userContext } from "@/app/background/Users";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
 import { arrayUnion, doc, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db, storage } from "../../../firebase";
@@ -14,6 +15,7 @@ export default function AddCircle(){
     const [imageUri, setImageUri] = useState(null);
     const [iamgeUrl, setImageUrl] = useState(null);
     const [id, setId] = useState(null);
+    const user = useContext(userContext);
     const nav = useNavigation();
     useEffect(() => {
         setId(Math.floor(Math.random() * (100000000 - 0 + 1)) + 0);
@@ -61,7 +63,11 @@ export default function AddCircle(){
                 name: name,
                 cover: iamgeUrl,
                 owner: auth.currentUser.uid,
-                members: [auth.currentUser.uid],
+                members: [{
+                    name: user.userData.name,
+                    uid: auth.currentUser.uid,
+                    pfp: user.userData.pfp
+                }],
                 created: new Date(),
                 id: id
             });
