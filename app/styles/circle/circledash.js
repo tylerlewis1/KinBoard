@@ -11,14 +11,34 @@ export default StyleSheet.create({
     },
     header: {
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
+        width: wp(100),
     },
     img: {
         width: hp(8),
         height: hp(8),
-        borderRadius: 100
+        borderRadius: 100,
+        marginLeft: wp(2),
     },
     name: {
-
-    }
+        paddingLeft: wp(3),
+        paddingTop: hp(2.8),
+        fontSize: hp(2),
+        fontWeight: 'bold'
+    },
+    back: {
+        marginTop: hp(2.5),
+        paddingHorizontal: wp(3)
+    },
+    hr: {
+        width: wp(100),
+        height: 2,
+        backgroundColor: "#d6d3d3",
+        marginTop: hp(1),
+    },
+    settings: {
+      position: "absolute",
+      right: wp(5),
+      top: hp(2)
+   },
 });

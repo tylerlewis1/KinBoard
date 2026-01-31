@@ -38,7 +38,6 @@ export default function UserProvider({ children }) {
             if (unsubscribeDoc) unsubscribeDoc();
         };
     }, []);
-
     return (
         <userContext.Provider value={{ userData, setUserData }}>
             {children}

@@ -1,17 +1,18 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from 'react';
-import { Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { db } from "../../../../firebase";
 import Circle from "./circle";
 export default function HouseHolds({userdata, setModalVisible}){
     const [circles, setCircles] = useState([]);
-    
+    const [loading, setLoading] = useState(true);
     console.log(userdata);
     
     useEffect(() => {
         const getCircleData = async() =>{    
             setCircles([]);
+            setLoading(true);
             userdata.circles.map(async (circle) => {
                 try{
                     console.log(circle);
@@ -21,13 +22,25 @@ export default function HouseHolds({userdata, setModalVisible}){
                 }catch(e){
                     alert("Error getting circles");
                     console.log(e);
+                    return(
+                        <View>
+                            <Text style={{color: "red"}}>Error: {e}</Text>
+                        </View>
+                    );
                 }
+                setLoading(false);
             });
         }
         getCircleData();
-        console.log("update");
     }, [userdata.circles]);
-    
+    if(loading){
+        return(
+            <View style={style.content}>
+                <ActivityIndicator size="large" style={style.lodaing} />
+                <Text style={{textAlign: "center", paddingTop: hp(2), fontWeight: "bold"}}>Loading...</Text>
+            </View>
+        )    
+    }
     return(
         <View style={style.content}>
             <Text style={style.header}>Circles</Text>
@@ -49,7 +62,9 @@ const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 const style = StyleSheet.create({
-  
+    lodaing: {
+        marginTop: hp(10)
+    },
    content: {
     backgroundColor: "#e2e2e2",
     position: "absolute",
