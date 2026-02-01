@@ -1,11 +1,12 @@
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import QRCode from 'react-native-qrcode-svg';
+import Home from "../home";
 export default function Content({selection, circleData}) {
     if(selection == "home"){
         return(
             <ScrollView style={style.container}>
-                <Text>home</Text>
+                <Home circleData={circleData}/>
             </ScrollView>
         )
     }

@@ -15,8 +15,8 @@ export default StyleSheet.create({
         width: wp(100),
     },
     img: {
-        width: hp(8),
-        height: hp(8),
+        width: hp(7),
+        height: hp(7),
         borderRadius: 100,
         marginLeft: wp(2),
     },

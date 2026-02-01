@@ -30,8 +30,9 @@ export default function Account() {
                 aspect: [4, 3],
                 quality: .1,
             })
-            saveImg(result.assets[0].uri);
+            
             if (!result.canceled) {
+                saveImg(result.assets[0].uri);
                 setImageUri(result.assets[0].uri);
             }
         }

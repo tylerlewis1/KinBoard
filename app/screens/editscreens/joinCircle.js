@@ -21,6 +21,7 @@ export default function JoinCircle(){
         }
         if(user.userData.circles.includes(Number(code))){
             alert("You are already in this circle");
+            nav.goBack();
             return;
         }
         try{

@@ -41,7 +41,7 @@ export default function CircleDash(){
                     <TouchableOpacity onPress={() => {nav.goBack()}}>
                         <Ionicons name="arrow-back" size={hp(2.5)} style={style.back} />
                     </TouchableOpacity>
-                    {(circleData?.cover == "")? (
+                    {(circleData?.cover != "")? (
                         <Image style={style.img} source={{uri: circleData?.cover}}/>   
                     ):(
                         <View style={{paddingBottom: hp(6)}}></View>
