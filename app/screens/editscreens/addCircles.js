@@ -63,7 +63,7 @@ export default function AddCircle(){
         try{
             const circleDoc = doc(db, "circles", String(id));
             const userDoc = doc(db, "users", auth.currentUser.uid);
-            const homeCollection = doc(db, "circles", String(id), "home", "init");
+            const homeCollection = doc(db, "circles", String(id), "home", "announcments");
             const userCollection = doc(db, "circles", String(id), auth.currentUser.uid, "init");
             const batch = writeBatch(db);
             batch.set(circleDoc, {
@@ -79,7 +79,14 @@ export default function AddCircle(){
                 id: id
             });
             batch.set(homeCollection, {
-                name: "Home"
+                Announcments: [
+                    {
+                        who: "Kin Board",
+                        msg: "Welcome to Kinboard! 🎉",
+                        pfp: "",
+                        date: new Date()
+                    }
+                ]
             });
             batch.set(userCollection, {
                 name: user.userData.name
