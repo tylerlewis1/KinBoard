@@ -71,6 +71,13 @@ export default function CircleDash(){
                 </View>    
                 <NavBar selection={selection} setSelection={setSelection} circleData={circleData}/>
                 <Content selection={selection} circleData={circleData}/>
+                {(selection == "home")? (
+                    <TouchableOpacity style={style.add}>
+                        <Text style={style.txt}>+</Text>
+                    </TouchableOpacity>
+                ):(
+                    <></>
+                )}
             </View>
         </SafeAreaView>
     )

@@ -4,6 +4,7 @@ import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-nat
 import { ScrollView } from "react-native-gesture-handler";
 import { db } from "../../../firebase";
 import Announcments from "./comps/announcments";
+import Button from "./comps/button";
 export default function Home({circleData}) {
     const [collectionData, setCollectionData] = useState(null);
     useEffect(() => {
@@ -15,8 +16,8 @@ export default function Home({circleData}) {
     const unsubscribe = onSnapshot(homeRef, (snapshot) => {
             // 2. Map docs synchronously (no async/await needed)
             const temp = snapshot.docs.map((doc) => ({
-                id: doc.id,         // Usually helpful to keep the ID
-                ...doc.data()       // The actual document fields
+                id: doc.id,
+                ...doc.data()       
             }));
 
             setCollectionData(temp);
@@ -42,21 +43,21 @@ export default function Home({circleData}) {
                 <Text style={style.header}>{circleData?.name}</Text>
             </View>
             <View style={style.content}>
-                <Announcments circleData={circleData} announcments={collectionData[0].Announcments}/>
-                {
-                    collectionData.map((data) => {
-                        if(data.id == "announcments"){
-                            return;
-                        }
-                        //render buttons 
-                        return(
-                            <Text key={data.id}>{String(data.id)}</Text>
-                        )
-                    })
-                }
-            
+                <Announcments circleData={circleData} announcments={collectionData?.find(d => d.id === "announcments").Announcments}/>
+                <View style={style.btns}>
+                    {
+                        collectionData.map((data) => {
+                            if(data.id == "announcments"){
+                                return;
+                            }
+                            //render buttons 
+                            return(
+                                <Button data={data} key={data.id}/>
+                            )
+                        })
+                    }
+                </View>
             </View>
-
         </ScrollView>
     );
 }
@@ -77,5 +78,13 @@ const style = StyleSheet.create({
     },
     announcments: {
         
-    }
+    },
+    btns: {
+        padding: hp(1),
+        display: "flex",
+        flexDirection: "row",
+        gap: wp(5),
+        flexWrap: "wrap"
+
+   }
 });

@@ -41,4 +41,18 @@ export default StyleSheet.create({
       right: wp(5),
       top: hp(2)
    },
+   add: {
+    position: "absolute",
+    bottom: hp(1),
+    right: wp(6),
+    backgroundColor: "#2EC4B6",
+    width: hp(7),
+    height: hp(7),
+    borderRadius: 10000
+   },
+   txt: {
+    fontSize: wp(10),
+    left: hp(2.2),
+    top: hp(.5)
+   },
 });
