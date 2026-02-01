@@ -1,9 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from '@expo/vector-icons/Entypo';
+import { Image } from "expo-image";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { Dimensions, Image, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../firebase";
 import style from "../../styles/circle/circledash";
@@ -18,20 +19,33 @@ export default function CircleDash(){
     const { width, height } = Dimensions.get("window");
     const wp = (percent) => width * (percent / 100);
     const hp = (percent) => height * (percent / 100);
+   
     useEffect(() => {
-        const getCircleData = async() =>{
-            try{
-                const circleDoc = doc(db, "circles", String(id));
-                const req = await getDoc(circleDoc);
-                setCircleData(req.data());
-            }catch(e){
-                console.log(e);
-                alert("There was a error getting your circle");
-                nav.goBack();
+    if (!id) return;
+
+    // 1. Ensure ID is a clean string (Expo Router sometimes returns arrays)
+    const cleanId = Array.isArray(id) ? id[0] : id;
+    const circleDocRef = doc(db, "circles", String(cleanId));
+
+    const unsubscribe = onSnapshot(circleDocRef, async(snapshot) => {
+        // 2. Check if .data is actually a function before calling it
+        if (snapshot && typeof snapshot.data === 'function') {
+            const data = await snapshot.data();
+            if (data) {
+                setCircleData(data);
             }
+        } else {
+            // 3. If it's not a function, it might already BE the data
+            console.log("Snapshot doesn't have .data() function. Result:", snapshot);
+            setCircleData(snapshot); 
         }
-        getCircleData();
-    }, []);
+    }, (error) => {
+        console.error("Firestore Listener Error:", error);
+    });
+
+    return () => unsubscribe();
+}, [id]);
+
 
     return(
         <SafeAreaView>
@@ -42,7 +56,7 @@ export default function CircleDash(){
                         <Ionicons name="arrow-back" size={hp(2.5)} style={style.back} />
                     </TouchableOpacity>
                     {(circleData?.cover != "")? (
-                        <Image style={style.img} source={{uri: circleData?.cover}}/>   
+                        <Image cachePolicy="disk" style={style.img} source={{uri: circleData?.cover}}/>   
                     ):(
                         <View style={{paddingBottom: hp(6)}}></View>
                     )}

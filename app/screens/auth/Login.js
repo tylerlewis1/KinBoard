@@ -1,7 +1,8 @@
 import { useNavigation } from "@react-navigation/native";
+import { Image } from "expo-image";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../firebase";
 import globalstyle from "../../styles/auth/global";
@@ -30,7 +31,7 @@ export default function Login(){
     return(
         <SafeAreaView>
             {/* <Text style={globalstyle.header}>Kin Board</Text> */}
-            <Image style={globalstyle.logo} source={require("../../../assets/images/logotb.png")}/>
+            <Image cachePolicy="disk" style={globalstyle.logo} source={require("../../../assets/images/logotb.png")}/>
             <View>
                 <TextInput
                     value={email}

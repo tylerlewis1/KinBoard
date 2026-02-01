@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { useContext } from "react";
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { auth } from "../../../../firebase";
 import { userContext } from "../../../background/Users";
@@ -20,9 +21,9 @@ export default function NavBar({selection, setSelection, circleData}){
                 onPress={() => setSelection(auth.currentUser.uid)}
             >
                 {(user.userData?.pfp != "")? (
-                    <Image source={{uri: user.userData?.pfp}} style={style.pfp} />
+                    <Image cachePolicy="disk" source={{uri: user.userData?.pfp}} style={style.pfp} />
                 ):(
-                    <Image source={require("../../../../assets/images/dpfp.png")} style={style.pfp}/>
+                    <Image cachePolicy="disk" source={require("../../../../assets/images/dpfp.png")} style={style.pfp}/>
                 )}
             </TouchableOpacity>
             {/* Load other users */}

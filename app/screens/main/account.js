@@ -1,13 +1,14 @@
 import { userContext } from "@/app/background/Users";
 import { auth, db, storage } from "@/firebase";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { arrayRemove, collection, doc, updateDoc, writeBatch } from "firebase/firestore";
 import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
-import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
+import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import global from "../../styles/main/global";
 
@@ -120,9 +121,9 @@ export default function Account() {
                 onPress={() => {pickImg()}}
             >
                 {(user.userData.pfp != "")? (
-                    <Image style={global.pfp} source={{uri: user.userData.pfp}}/>
+                    <Image cachePolicy="disk" style={global.pfp} source={{uri: user.userData.pfp}}/>
                 ): (
-                    <Image style={global.pfp} source={require("../../../assets/images/dpfp.png")}/>
+                    <Image cachePolicy="disk" style={global.pfp} source={require("../../../assets/images/dpfp.png")}/>
                 )}
             </TouchableOpacity>
                 

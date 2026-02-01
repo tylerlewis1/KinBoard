@@ -11,7 +11,7 @@ import Account from "./screens/main/account";
 import Dash from "./screens/main/dash";
 import Loading from "./screens/other/Loading";
 export default function Index() {
-  const [init, setInit] = useState(false);
+  const [init, setInit] = useState(true);
   const user = useContext(userContext);
   const Stack = createNativeStackNavigator();
   const opacity = useRef(new Animated.Value(1)).current;

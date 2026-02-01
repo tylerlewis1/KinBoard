@@ -1,15 +1,48 @@
-import { Dimensions, StyleSheet, Text, View } from "react-native";
+import { collection, onSnapshot } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import { db } from "../../../firebase";
 import Announcments from "./comps/announcments";
 export default function Home({circleData}) {
-    
+    const [collectionData, setCollectionData] = useState(null);
+    useEffect(() => {
+    // 1. Guard clause: don't run if circleData hasn't loaded yet
+    if (!circleData?.id) return;
+
+    const homeRef = collection(db, "circles", String(circleData.id), "home");
+
+    const unsubscribe = onSnapshot(homeRef, (snapshot) => {
+            // 2. Map docs synchronously (no async/await needed)
+            const temp = snapshot.docs.map((doc) => ({
+                id: doc.id,         // Usually helpful to keep the ID
+                ...doc.data()       // The actual document fields
+            }));
+
+            setCollectionData(temp);
+        }, (e) => {
+            console.error("Listener failed: ", e);
+        });
+
+        // 3. Return the unsubscribe function directly for cleanup
+        return unsubscribe;
+      
+    }, [circleData?.id]);
+
+
+    if(!collectionData){
+        return(
+            <ActivityIndicator size="large" style={{top: hp(30)}}/>
+        )
+    }
     return(
+        
         <ScrollView style={style.continer}>
             <View style={style.top}>
                 <Text style={style.header}>{circleData?.name}</Text>
             </View>
             <View style={style.content}>
-                <Announcments circleData={circleData}/>
+                <Announcments circleData={circleData} announcments={collectionData[0].Announcments}/>
             </View>
         </ScrollView>
     );

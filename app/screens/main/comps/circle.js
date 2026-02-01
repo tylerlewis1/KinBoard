@@ -1,6 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import { router, useNavigation } from "expo-router";
-import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export default function Circle({id, name, cover}) {
     const nav = useNavigation();
     return(
@@ -17,7 +18,7 @@ export default function Circle({id, name, cover}) {
                 {(cover == "" || cover == null) ? (
                     <Ionicons name="home" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />    
                 ): (
-                    <Image source={{uri: cover}} style={{width: hp(9), height: hp(9), display: "block",borderRadius: 100, margin: "auto"}}/>
+                    <Image cachePolicy="disk" source={{uri: cover}} style={{width: hp(9), height: hp(9), display: "block",borderRadius: 100, margin: "auto"}}/>
                 )}
             </View>
             <View>

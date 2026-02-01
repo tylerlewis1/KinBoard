@@ -1,12 +1,13 @@
 
 import { userContext } from "@/app/background/Users";
 import { Ionicons } from "@expo/vector-icons";
+import { Image } from "expo-image";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
 import { arrayUnion, doc, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
-import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db, storage } from "../../../firebase";
 import style from "../../styles/editscreens/addCircle";
@@ -121,9 +122,9 @@ export default function AddCircle(){
                     onPress={() => {pickImg()}}
                 >
                 {(iamgeUrl == null) ? (
-                    <Image style={style.img} source={require("../../../assets/images/addimg.png")}/>
+                    <Image cachePolicy="disk" style={style.img} source={require("../../../assets/images/addimg.png")}/>
                 ): (
-                    <Image style={style.img} source={{uri: iamgeUrl}}/>
+                    <Image cachePolicy="disk" style={style.img} source={{uri: iamgeUrl}}/>
                 )}
                 </TouchableOpacity>
                 <TextInput
