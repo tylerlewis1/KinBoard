@@ -22,6 +22,7 @@ export default function Announcments({circleData, announcments}) {
                 <View style={style.msg}>
                     <Text style={style.msgtxt}>{announcments[announcments.length -1].msg}</Text>
                 </View>
+                <Text style={{paddingVertical: hp(1)}}>{(announcments[announcments.length - 1].date.toDate()).toLocaleString()}</Text>
             </View>
         </View>
     );

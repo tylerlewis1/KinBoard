@@ -43,7 +43,20 @@ export default function Home({circleData}) {
             </View>
             <View style={style.content}>
                 <Announcments circleData={circleData} announcments={collectionData[0].Announcments}/>
+                {
+                    collectionData.map((data) => {
+                        if(data.id == "announcments"){
+                            return;
+                        }
+                        //render buttons 
+                        return(
+                            <Text key={data.id}>{String(data.id)}</Text>
+                        )
+                    })
+                }
+            
             </View>
+
         </ScrollView>
     );
 }
