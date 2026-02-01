@@ -8,7 +8,7 @@ export default function QrCodeScanner({setCode}) {
     const isPermissionGranted = Boolean(permission?.granted);
     useEffect(()=>{
         try{    
-            if(!isPermissionGranted){
+            if(isPermissionGranted){
                 requestPermission();
             }
         }catch(e){

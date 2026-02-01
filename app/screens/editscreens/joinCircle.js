@@ -19,9 +19,14 @@ export default function JoinCircle(){
             alert("You must enter a code");
             return;
         }
+        if(user.userData.circles.includes(Number(code))){
+            alert("You are already in this circle");
+            return;
+        }
         try{
             const circleRef = doc(db, "circles", code);
             const userRef = doc(db, "users", auth.currentUser.uid);
+            const userCollection = doc(db, "circles", code, auth.currentUser.uid, "init");
             const circleSnap = await getDoc(circleRef);
             if(!circleSnap.exists()){
                 alert("No circle found");
@@ -35,8 +40,11 @@ export default function JoinCircle(){
                     name: user.userData.name
                 })
             })
+            batch.set(userCollection, {
+                name: user.userData.name
+            })
             batch.update(userRef, {
-                circles: arrayUnion(code)
+                circles: arrayUnion(Number(code))
             });
             await batch.commit();
             nav.navigate("Home");

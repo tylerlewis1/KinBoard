@@ -5,7 +5,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { arrayRemove, collection, doc, updateDoc, writeBatch } from "firebase/firestore";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
 import { Alert, Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -81,16 +81,24 @@ export default function Account() {
                 pfp: user.userData.pfp,
                 uid: auth.currentUser.uid
             }
-            user.userData.circles.map((circleID) => {
+            user.userData.circles.map( async(circleID) => {
                 const circleRef = doc(db, "circles", String(circleID));
-                const circleCollection = doc(collection(circleRef, auth.currentUser.uid));
+                const circleCollection = doc(collection(circleRef, String(auth.currentUser.uid)));
                 batch.update(circleRef, {
                     members: arrayRemove(userMap)
                 })
-                batch.delete(circleCollection);
+                // const snapshot = await getDocs(circleCollection);
+                // snapshot.forEach((subDoc) => {
+                //     batch.delete(subDoc.ref);
+                // });
             });
             batch.delete(userdoc);
             await batch.commit();
+            //del images
+            if(user.userData.pfp != ""){
+                const fileRef = ref(storage, `images/${auth.currentUser.uid}/pfp.jpg`);
+                await deleteObject(fileRef);
+            }
             auth.currentUser.delete();
             alert("Your account has been deleated!");
         } catch(e){

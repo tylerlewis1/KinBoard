@@ -1,8 +1,8 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { doc, getDoc } from "firebase/firestore";
+import { arrayRemove, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { db } from "../../../../firebase";
+import { auth, db } from "../../../../firebase";
 import Circle from "./circle";
 export default function HouseHolds({userdata, setModalVisible}){
     const [circles, setCircles] = useState([]);
@@ -18,6 +18,18 @@ export default function HouseHolds({userdata, setModalVisible}){
                     console.log(circle);
                     const circleRef = doc(db, "circles", String(circle));
                     const data = await getDoc(circleRef);
+                    if(!data.exists()){
+                        try{
+                            const userDoc = doc(db, "users", auth.currentUser.uid);
+                            console.log(circle);
+                            await updateDoc(userDoc, {
+                                circles: arrayRemove(circle)
+                            });
+                        } catch(e){
+                            console.log(e);
+                        }
+                    return;
+                    }
                     setCircles(prev => [...prev, data.data()]);
                 }catch(e){
                     alert("Error getting circles");
@@ -47,8 +59,11 @@ export default function HouseHolds({userdata, setModalVisible}){
             <Text style={style.header}>Circles</Text>
             <ScrollView style={style.btnscroll} contentContainerStyle={style.gridContainer}>
                {circles.map((data) => {
+                if(data == null){
+                    return;
+                }
                 return( 
-                    <Circle key={data.id} name={data.name} cover={data.cover} id={data.id}/>
+                    <Circle key={data?.id} name={data?.name} cover={data?.cover} id={data?.id}/>
                 )
                })}
                 <TouchableOpacity style={style.btn} onPress={() => {setModalVisible(true)}}>

@@ -3,7 +3,7 @@ import { userContext } from "@/app/background/Users";
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
-import { arrayUnion, collection, doc, writeBatch } from "firebase/firestore";
+import { arrayUnion, doc, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 import { Image, Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -62,8 +62,8 @@ export default function AddCircle(){
         try{
             const circleDoc = doc(db, "circles", String(id));
             const userDoc = doc(db, "users", auth.currentUser.uid);
-            const homeCollection = doc(collection(circleDoc, "home"));
-            const userCollection = doc(collection(circleDoc, auth.currentUser.uid));
+            const homeCollection = doc(db, "circles", String(id), "home", "init");
+            const userCollection = doc(db, "circles", String(id), auth.currentUser.uid, "init");
             const batch = writeBatch(db);
             batch.set(circleDoc, {
                 name: name,
