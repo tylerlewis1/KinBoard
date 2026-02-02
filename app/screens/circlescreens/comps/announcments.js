@@ -1,8 +1,12 @@
+import { userContext } from '@/app/background/Users';
 import { Image } from 'expo-image';
-import { useState } from "react";
+import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore';
+import { useContext, useState } from "react";
 import { ActivityIndicator, Dimensions, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from 'react-native-gesture-handler';
+import { db } from "../../../../firebase";
 export default function Announcments({circleData, announcments}) {
+    const user = useContext(userContext);
     const [data, setData] = useState(null);
     const [msg, setMsg] = useState("");
     const [modalVis, setModalVis] = useState(false);
@@ -11,7 +15,23 @@ export default function Announcments({circleData, announcments}) {
             alert("You must enter a message");
             return;
         }
-        
+        const announcmentDoc = doc(db, "circles", String(circleData.id));
+        const announcmentsDoc = doc(collection(announcmentDoc, "home"), "announcments");
+        try{
+            await updateDoc(announcmentsDoc, {
+                Announcments: arrayUnion({
+                    date: new Date(),
+                    msg: msg,
+                    who: user.userData.name,
+                    pfp: user.userData.pfp
+                })
+            })
+        }catch(e){
+            console.log(e);
+            alert("There was a error posting the announcment");
+        }
+        setModalVis(false);
+        setMsg("");
     }
 
     if(!announcments){
@@ -51,14 +71,14 @@ export default function Announcments({circleData, announcments}) {
                             value={msg}
                             style={style.msgbox}
                         />
-                        <TouchableOpacity style={style.btn}><Text style={style.btntxt}>Send</Text></TouchableOpacity>
+                        <TouchableOpacity style={style.btn} onPress={() => {send()}}><Text style={style.btntxt}>Send</Text></TouchableOpacity>
                     </View>
                 </View>
             </Modal>
             <View>
                 
                 <View style={style.header}>
-                    {(data?.Announcments[data?.Announcments.length -1].pfp) ? (
+                    {(announcments[announcments.length -1].pfp) ? (
                         <Image style={style.img} source={{uri: announcments[announcments.length -1].pfp}}/>
                     ):(
                         <Image cachePolicy="disk" style={style.img} source={require("../../../../assets/images/logotb.png")}/>
@@ -148,6 +168,7 @@ const style = StyleSheet.create({
         height: hp(20),
         padding: wp(2),
         backgroundColor: "#c5c3c3",
+        fontSize: wp(4)
     },
     btn: {
         backgroundColor: "#2EC4B6",
