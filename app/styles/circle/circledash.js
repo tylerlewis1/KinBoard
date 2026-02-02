@@ -51,8 +51,8 @@ export default StyleSheet.create({
     borderRadius: 10000
    },
    txt: {
-    fontSize: wp(10),
-    left: hp(2.2),
-    top: hp(.5)
+    fontSize: hp(5),
+    textAlign: "center",
+    top: hp(.2)
    },
 });

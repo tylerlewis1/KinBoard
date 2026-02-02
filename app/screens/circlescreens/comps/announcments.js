@@ -1,8 +1,19 @@
 import { Image } from 'expo-image';
 import { useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Dimensions, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TextInput } from 'react-native-gesture-handler';
 export default function Announcments({circleData, announcments}) {
     const [data, setData] = useState(null);
+    const [msg, setMsg] = useState("");
+    const [modalVis, setModalVis] = useState(false);
+    const send = async() => {
+        if(msg == ""){
+            alert("You must enter a message");
+            return;
+        }
+        
+    }
+
     if(!announcments){
         return(
             <ActivityIndicator/>
@@ -10,7 +21,42 @@ export default function Announcments({circleData, announcments}) {
     }
     return(
         <View style={style.continer}>
+            <Modal
+                visible={modalVis}
+                animationType="fade"
+                transparent={true}
+                onRequestClose={() => {
+                    setModalVis(false) 
+                    setMsg("")
+                }}
+            >
+                <Pressable style={{backgroundColor: "rgba(0, 0, 0, .5)", width: wp(100), height: hp(100), zIndex: 10000}} onPress={() => {
+                    setModalVis(false)
+                    setMsg("");
+                    }}>
+                </Pressable>
+                <View style={style.modal}>
+                    <View style={style.top}>
+                        <Text style={{fontSize: wp(6)}}>New Announcment</Text>
+                        <TouchableOpacity onPress={() => {
+                            setModalVis(false)
+                            setMsg("");
+                            }} style={style.closebtn}><Text style={{fontSize: wp(6)}}>X</Text></TouchableOpacity>
+                    </View>
+                    <View style={style.form}>
+                        <TextInput
+                            placeholder='Message'
+                            multiline={true}
+                            onChangeText={setMsg}
+                            value={msg}
+                            style={style.msgbox}
+                        />
+                        <TouchableOpacity style={style.btn}><Text style={style.btntxt}>Send</Text></TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
             <View>
+                
                 <View style={style.header}>
                     {(data?.Announcments[data?.Announcments.length -1].pfp) ? (
                         <Image style={style.img} source={{uri: announcments[announcments.length -1].pfp}}/>
@@ -18,6 +64,9 @@ export default function Announcments({circleData, announcments}) {
                         <Image cachePolicy="disk" style={style.img} source={require("../../../../assets/images/logotb.png")}/>
                     )}
                     <Text style={style.name}>{announcments[announcments.length -1].who}</Text>
+                    <TouchableOpacity style={style.post} onPress={() => {setModalVis(true)}}>
+                        <Text>Create</Text>
+                    </TouchableOpacity>
                 </View>
                 <View style={style.msg}>
                     <Text style={style.msgtxt}>{announcments[announcments.length -1].msg}</Text>
@@ -60,5 +109,56 @@ const style = StyleSheet.create({
     name: {
         marginTop: hp(1),
         fontWeight: "bold"
+    },
+    post: {
+        position: "absolute",
+        right: wp(1.5),
+        backgroundColor: "#2EC4B6",
+        padding: wp(1),
+        borderRadius: 10
+    },
+    modal: {
+        backgroundColor: "#ececec",
+        width: wp(90),
+        top: hp(30),
+        left: wp(5),
+        zIndex: 10001,
+        position: "absolute"
+    },
+    top: {
+        width: wp(90),
+        padding: hp(2),
+        display: 'flex',
+        flexDirection: "row"
+    },
+    closebtn: {
+        position: "absolute",
+        fontSize: hp(4),
+        right: wp(4),
+        top: hp(1.5)
+    },
+    form: {
+        backgroundColor: "#e3e0e0",
+        height: hp(35)
+    },
+    msgbox: {
+        width: wp(80),
+        left: wp(5),
+        top: hp(2),
+        height: hp(20),
+        padding: wp(2),
+        backgroundColor: "#c5c3c3",
+    },
+    btn: {
+        backgroundColor: "#2EC4B6",
+        width: wp(30),
+        padding: hp(2),
+        margin: "auto",
+        borderRadius: 10
+    },
+    btntxt: {
+        textAlign: "center",
+        fontWeight: "bold"
     }
+
 });
