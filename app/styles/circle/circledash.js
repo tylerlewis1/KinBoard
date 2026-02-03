@@ -55,4 +55,12 @@ export default StyleSheet.create({
     textAlign: "center",
     top: hp(.2)
    },
+   addcontent: {
+    backgroundColor: "white",
+    position: "absolute",
+    bottom: 0,
+    width: wp(100),
+    minHeight: hp(45),
+    borderRadius: 50
+   }
 });

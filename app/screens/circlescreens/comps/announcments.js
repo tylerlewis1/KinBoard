@@ -2,7 +2,7 @@ import { userContext } from '@/app/background/Users';
 import { Image } from 'expo-image';
 import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore';
 import { useContext, useState } from "react";
-import { ActivityIndicator, Dimensions, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from 'react-native-gesture-handler';
 import { db } from "../../../../firebase";
 export default function Announcments({circleData, announcments}) {
@@ -55,25 +55,31 @@ export default function Announcments({circleData, announcments}) {
                     setMsg("");
                     }}>
                 </Pressable>
-                <View style={style.modal}>
-                    <View style={style.top}>
-                        <Text style={{fontSize: wp(6)}}>New Announcment</Text>
-                        <TouchableOpacity onPress={() => {
-                            setModalVis(false)
-                            setMsg("");
-                            }} style={style.closebtn}><Text style={{fontSize: wp(6)}}>X</Text></TouchableOpacity>
+                <KeyboardAvoidingView 
+                    behavior="position"
+                    keyboardVerticalOffset={-hp(25)}
+                    contentContainerStyle={{width: wp(100), height: hp(100), position: "absolute"}}
+                >
+                    <View style={style.modal}>
+                        <View style={style.top}>
+                            <Text style={{fontSize: wp(6)}}>New Announcment</Text>
+                            <TouchableOpacity onPress={() => {
+                                setModalVis(false)
+                                setMsg("");
+                                }} style={style.closebtn}><Text style={{fontSize: wp(6)}}>X</Text></TouchableOpacity>
+                        </View>
+                        <View style={style.form}>
+                            <TextInput
+                                placeholder='Message'
+                                multiline={true}
+                                onChangeText={setMsg}
+                                value={msg}
+                                style={style.msgbox}
+                            />
+                            <TouchableOpacity style={style.btn} onPress={() => {send()}}><Text style={style.btntxt}>Send</Text></TouchableOpacity>
+                        </View>
                     </View>
-                    <View style={style.form}>
-                        <TextInput
-                            placeholder='Message'
-                            multiline={true}
-                            onChangeText={setMsg}
-                            value={msg}
-                            style={style.msgbox}
-                        />
-                        <TouchableOpacity style={style.btn} onPress={() => {send()}}><Text style={style.btntxt}>Send</Text></TouchableOpacity>
-                    </View>
-                </View>
+                </KeyboardAvoidingView>
             </Modal>
             <View>
                 
