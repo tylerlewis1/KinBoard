@@ -37,6 +37,8 @@ export default function CircleDash(){
             const data = await snapshot.data();
             if (data) {
                 setCircleData(data);
+            } else{
+                return;
             }
             if(data.members.find(d => d.uid === auth.currentUser.uid).pfp != user.userData.pfp){
                 const update = data.members;
@@ -67,7 +69,7 @@ export default function CircleDash(){
                     <TouchableOpacity onPress={() => {nav.goBack()}}>
                         <Ionicons name="arrow-back" size={hp(2.5)} style={style.back} />
                     </TouchableOpacity>
-                    {(circleData?.cover != "")? (
+                    {(circleData?.cover != "" && circleData?.cover != null)? (
                         <Image cachePolicy="disk" style={style.img} source={{uri: circleData?.cover}}/>   
                     ):(
                         <View style={{paddingBottom: hp(6)}}></View>

@@ -12,6 +12,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db, storage } from "../../../firebase";
 import style from "../../styles/editscreens/addCircle";
 export default function AddCircle(){
+    const [loading, setLoading] = useState(false);
     const [name, setName] = useState("");
     const [imageUri, setImageUri] = useState(null);
     const [iamgeUrl, setImageUrl] = useState(null);
@@ -22,7 +23,7 @@ export default function AddCircle(){
         setId(Math.floor(Math.random() * (100000000 - 0 + 1)) + 0);
     }, [])
     const pickImg = async() =>{
-        console.log("test");
+        setLoading(true);
         const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
         console.log(status);
         if(status != "granted"){
@@ -45,7 +46,7 @@ export default function AddCircle(){
         try{
             let res = await fetch(uri);
             const blob = await res.blob();
-            const storageRef = ref(storage, `images/${auth.currentUser.uid}/${id}.jpg`);
+            const storageRef = ref(storage, `images/circles/${id}/cover.jpg`);
             await uploadBytes(storageRef, blob);
             const url = await getDownloadURL(storageRef);
             setImageUrl(url);
@@ -55,6 +56,7 @@ export default function AddCircle(){
             console.log(e);
             alert("There was a error saving you image");
         }
+        setLoading(false);
     }
     const createCircle = async() => {
         if(name == ""){
@@ -62,8 +64,9 @@ export default function AddCircle(){
             return;
         }
         try{
+            setLoading(true);
             const circleDoc = doc(db, "circles", String(id));
-            const userDoc = doc(db, "users", auth.currentUser.uid);
+            const userDoc = doc(db, "users", user.userData.uid);
             const homeCollection = doc(db, "circles", String(id), "home", "announcments");
             const userCollection = doc(db, "circles", String(id), auth.currentUser.uid, "init");
             const batch = writeBatch(db);
@@ -92,9 +95,9 @@ export default function AddCircle(){
             batch.set(userCollection, {
                 name: user.userData.name
             });
-            batch.update(userDoc, {
+            batch.set(userDoc, {
                 circles: arrayUnion(id)
-            });
+            }, {merge: true});
             await batch.commit();
             nav.goBack();
 
@@ -102,6 +105,7 @@ export default function AddCircle(){
             alert("There was an error creating you circle");
             console.log(e);
         }
+        setLoading(false);
     }
     return(
         <SafeAreaView>
@@ -137,6 +141,7 @@ export default function AddCircle(){
 
 
                 <TouchableOpacity
+                    disabled={loading}
                     style={[style.btn, {backgroundColor: "#2EC4B6"}]}
                     onPress={() => {createCircle()}}
                 ><Text style={style.btntxt}>Create Circle</Text></TouchableOpacity>

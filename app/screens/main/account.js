@@ -6,7 +6,7 @@ import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { arrayRemove, collection, doc, updateDoc, writeBatch } from "firebase/firestore";
-import { deleteObject, getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -94,13 +94,8 @@ export default function Account() {
                 //     batch.delete(subDoc.ref);
                 // });
             });
-            batch.delete(userdoc);
             await batch.commit();
             //del images
-            if(user.userData.pfp != ""){
-                const fileRef = ref(storage, `images/${auth.currentUser.uid}/pfp.jpg`);
-                await deleteObject(fileRef);
-            }
             auth.currentUser.delete();
             alert("Your account has been deleated!");
         } catch(e){

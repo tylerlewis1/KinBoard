@@ -1,9 +1,24 @@
 import { Ionicons } from "@expo/vector-icons";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 export default function NavBar({data}){
+    console.log(data.id)
     const getIcon = () => {
+        if(data.id.startsWith("chores")){
+            return(
+                <FontAwesome6 size={hp(7)} style={style.icon} name="broom"/>
+            )
+        } else if(data.id.startsWith("list")){
+            return(
+                <Ionicons size={hp(7)} style={style.icon} name="list"/>
+            )
+        }else if(data.id.startsWith("events")){
+            return(
+                <Ionicons size={hp(7)} style={style.icon} name="calendar"/>
+            )
+        }
         return(
-            <Ionicons size={hp(9)} style={style.icon} name="idk"/>
+            <Ionicons size={hp(7)} style={style.icon} name="idk"/>
         )
     }
     return(
@@ -14,7 +29,7 @@ export default function NavBar({data}){
                 }                
             </View>
             <View style={style.bottom}>
-                <Text style={{textAlign: "center"}}>{data.id}</Text>
+                <Text style={{textAlign: "center"}}>{(data.name)? (data.name) : ("No name")}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -32,10 +47,11 @@ const style = StyleSheet.create({
         borderRadius: 10
     },
     top: {
-
+        height: hp(11)
     },
     icon: {
-        textAlign: 'center'
+        textAlign: 'center',
+        margin: "auto"
     }
 
 });
