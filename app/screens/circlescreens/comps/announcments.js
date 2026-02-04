@@ -16,10 +16,10 @@ export default function Announcments({circleData, announcments}) {
             return;
         }
         const announcmentDoc = doc(db, "circles", String(circleData.id));
-        const announcmentsDoc = doc(collection(announcmentDoc, "home"), "announcments");
+        const announcmentsDoc = doc(collection(announcmentDoc, "home"), "announcements");
         try{
             await updateDoc(announcmentsDoc, {
-                Announcments: arrayUnion({
+                msgs: arrayUnion({
                     date: new Date(),
                     msg: msg,
                     who: user.userData.name,

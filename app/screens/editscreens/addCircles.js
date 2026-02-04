@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from "expo-router";
-import { arrayUnion, doc, writeBatch } from "firebase/firestore";
+import { arrayUnion, collection, doc, writeBatch } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { useContext, useEffect, useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
@@ -65,39 +65,46 @@ export default function AddCircle(){
         }
         try{
             setLoading(true);
-            const circleDoc = doc(db, "circles", String(id));
-            const userDoc = doc(db, "users", user.userData.uid);
-            const homeCollection = doc(db, "circles", String(id), "home", "announcments");
-            const userCollection = doc(db, "circles", String(id), auth.currentUser.uid, "init");
             const batch = writeBatch(db);
-            batch.set(circleDoc, {
-                name: name,
-                cover: iamgeUrl,
-                owner: auth.currentUser.uid,
-                members: [{
-                    name: user.userData.name,
-                    uid: auth.currentUser.uid,
-                    pfp: user.userData.pfp
-                }],
-                created: new Date(),
-                id: id
-            });
-            batch.set(homeCollection, {
-                Announcments: [
-                    {
-                        who: "Kin Board",
-                        msg: "Welcome to Kinboard! 🎉",
-                        pfp: "",
-                        date: new Date()
-                    }
-                ]
-            });
-            batch.set(userCollection, {
-                name: user.userData.name
-            });
-            batch.set(userDoc, {
+            const userRef = doc(db, "users", auth.currentUser.uid);
+            const circleRef = doc(db, "circles", String(id));
+            const circleuserRef = doc(collection(circleRef, "members"), auth.currentUser.uid);
+            const homeMods = doc(collection(circleRef, "home"), "modules");
+            const annRef = doc(collection(circleRef, "home"), "announcements");
+            batch.set(userRef, {
                 circles: arrayUnion(id)
             }, {merge: true});
+            batch.set(circleRef, {
+                name: name,
+                id: String(id),
+                created: new Date(),
+                cover: iamgeUrl
+            })
+            batch.set(circleuserRef, {
+                name: user.userData.name,
+                uid: auth.currentUser.uid,
+                pfp: user.userData.pfp,
+                role: "Owner"
+            });
+            batch.set(annRef, {
+                msgs:[
+                    {
+                       msg: "Welcome to Kin Board!",
+                       pfp: "",
+                       date: new Date(),
+                       who: "Kin Board"
+                    }
+                ]
+            })
+            batch.set(homeMods, {
+                mods:[
+                    {
+                        name: "shoping",
+                        id: 324325,
+                        type: "list"
+                    }
+                ]
+            })
             await batch.commit();
             nav.goBack();
 

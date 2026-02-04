@@ -1,18 +1,18 @@
 import { Ionicons } from "@expo/vector-icons";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-export default function NavBar({data}){
+export default function Btn({data}){
     console.log(data.id)
     const getIcon = () => {
-        if(data.id.startsWith("chores")){
+        if(data.type.startsWith("chores")){
             return(
                 <FontAwesome6 size={hp(7)} style={style.icon} name="broom"/>
             )
-        } else if(data.id.startsWith("list")){
+        } else if(data.type.startsWith("list")){
             return(
                 <Ionicons size={hp(7)} style={style.icon} name="list"/>
             )
-        }else if(data.id.startsWith("events")){
+        }else if(data.type.startsWith("events")){
             return(
                 <Ionicons size={hp(7)} style={style.icon} name="calendar"/>
             )

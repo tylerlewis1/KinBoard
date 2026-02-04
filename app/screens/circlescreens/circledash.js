@@ -1,11 +1,13 @@
 import { userContext } from "@/app/background/Users";
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from '@expo/vector-icons/Entypo';
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { doc, onSnapshot, updateDoc } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../../firebase";
 import style from "../../styles/circle/circledash";
@@ -17,6 +19,7 @@ export default function CircleDash(){
     const nav = useNavigation();
     const user = useContext(userContext);
     const [circleData, setCircleData] = useState();
+    const [memberData, setMemberData] = useState();
     const [isOwner, setIsOwner] = useState(false);
     const [showAddModal, SetShowAddModal] = useState(false);
     const [selection, setSelection] = useState("home");
@@ -24,42 +27,50 @@ export default function CircleDash(){
     const wp = (percent) => width * (percent / 100);
     const hp = (percent) => height * (percent / 100);
    
+    //Get circle data
     useEffect(() => {
-    if (!id) return;
+        if (!id) return;
+        const cleanId = Array.isArray(id) ? id[0] : id;
+        const circleDocRef = doc(db, "circles", String(cleanId));
 
-    // 1. Ensure ID is a clean string (Expo Router sometimes returns arrays)
-    const cleanId = Array.isArray(id) ? id[0] : id;
-    const circleDocRef = doc(db, "circles", String(cleanId));
-
-    const unsubscribe = onSnapshot(circleDocRef, async(snapshot) => {
-        // 2. Check if .data is actually a function before calling it
-        if (snapshot && typeof snapshot.data === 'function') {
-            const data = await snapshot.data();
-            if (data) {
-                setCircleData(data);
-            } else{
-                return;
+        const unsubscribe = onSnapshot(circleDocRef, async(snapshot) => {
+            if (snapshot && typeof snapshot.data === 'function') {
+                const data = await snapshot.data();
+                if (data) {
+                    console.log(data)
+                    setCircleData(data);
+                } else{
+                    return;
+                }
+            } else {
+                // 3. If it's not a function, it might already BE the data
+                console.log("Snapshot doesn't have .data() function. Result:", snapshot);
+                setCircleData(snapshot); 
             }
-            if(data.members.find(d => d.uid === auth.currentUser.uid).pfp != user.userData.pfp){
-                const update = data.members;
-                update.find(d => d.uid === auth.currentUser.uid).pfp = user.userData.pfp;
-                await updateDoc(circleDocRef, {
-                    members: update
-                });
-                console.log("pfp update");
-            }
-        } else {
-            // 3. If it's not a function, it might already BE the data
-            console.log("Snapshot doesn't have .data() function. Result:", snapshot);
-            setCircleData(snapshot); 
-        }
-    }, (error) => {
-        console.error("Firestore Listener Error:", error);
-    });
+        }, (error) => {
+            console.error("Firestore Listener Error:", error);
+        });
 
-    return () => unsubscribe();
-}, [id]);
+        return () => unsubscribe();
+    }, [id]);
 
+    //getUsers
+    useEffect(() => {
+        if (!id) return;
+        const cleanId = Array.isArray(id) ? id[0] : id;
+        const membersRef = collection(db, "circles", String(cleanId), "members");
+        const unsubscribeUsers = onSnapshot(membersRef, async(snapshot) => {
+                const membersList = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                setMemberData(membersList);
+        }, (error) => {
+            console.error("Firestore Listener Error:", error);
+        });
+
+        return () => unsubscribeUsers();
+    }, [id]);
 
     return(
         <SafeAreaView>
@@ -83,7 +94,7 @@ export default function CircleDash(){
                         <Entypo name="cog" size={hp(4.5)} />
                     </TouchableOpacity>
                 </View>    
-                <NavBar selection={selection} setSelection={setSelection} circleData={circleData}/>
+                <NavBar selection={selection} setSelection={setSelection} memberData={memberData}/>
                 <Content selection={selection} circleData={circleData}/>
                 {(selection == "home" || selection == auth.currentUser.uid)? (
                     <TouchableOpacity style={style.add} 
@@ -99,9 +110,44 @@ export default function CircleDash(){
                     visible={showAddModal}
                     onClose={() => SetShowAddModal(false)}
                     >
-                    <View style={style.addcontent}>
-                        <Text>add</Text>
-                    </View>
+                    <ScrollView style={style.addcontent}
+                        contentContainerStyle={{
+                            flexDirection: "row",
+                            flexWrap: "wrap",
+                            padding: wp(5),
+                            gap: wp(9), 
+                            justifyContent: "center" 
+                        }}
+                    >
+                        <TouchableOpacity style={style.addbtn}>
+                            <View style={style.btnTop}>
+                                <Ionicons size={hp(7)} style={style.icon} name="list"/>
+                            </View>
+                            <View style={style.btnBottom}>
+                                <Text>List</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={style.addbtn}>
+                            <View style={style.btnTop}>
+                                <Ionicons size={hp(7)} style={style.icon} name="calendar"/>
+                            </View>
+                            <View style={style.btnBottom}>
+                                <Text>Events</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={style.addbtn}>
+                            <View style={style.btnTop}>
+                               <FontAwesome6 size={hp(7)} style={style.icon} name="broom"/>
+                            </View>
+                            <View style={style.btnBottom}>
+                                <Text>Chores</Text>
+                            </View>
+                        </TouchableOpacity>
+
+                        
+                    </ScrollView>
                 </SlideUpModal>
 
         </SafeAreaView>

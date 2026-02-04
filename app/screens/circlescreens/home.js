@@ -1,34 +1,48 @@
-import { collection, onSnapshot } from "firebase/firestore";
+import { collection, doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { db } from "../../../firebase";
 import Announcments from "./comps/announcments";
-import Button from "./comps/button";
+import Btn from "./comps/button";
 export default function Home({circleData}) {
     const [collectionData, setCollectionData] = useState(null);
+    const [mods, setMods] = useState(null);
+    //get announcments
     useEffect(() => {
-    // 1. Guard clause: don't run if circleData hasn't loaded yet
     if (!circleData?.id) return;
-
-    const homeRef = collection(db, "circles", String(circleData.id), "home");
-
+    const homeRef = doc(collection(db, "circles", String(circleData.id), "home"), "announcements");
     const unsubscribe = onSnapshot(homeRef, (snapshot) => {
-            // 2. Map docs synchronously (no async/await needed)
-            const temp = snapshot.docs.map((doc) => ({
-                id: doc.id,
-                ...doc.data()       
-            }));
-
-            setCollectionData(temp);
+            setCollectionData(snapshot.data());
         }, (e) => {
             console.error("Listener failed: ", e);
         });
-
-        // 3. Return the unsubscribe function directly for cleanup
         return unsubscribe;
       
     }, [circleData?.id]);
+    useEffect(() => {
+    if (!circleData?.id) return;
+        const homeRef = doc(collection(db, "circles", String(circleData.id), "home"), "announcements");
+        const unsubscribe = onSnapshot(homeRef, (snapshot) => {
+                setCollectionData(snapshot.data());
+            }, (e) => {
+                console.error("Listener failed: ", e);
+            });
+            return unsubscribe;
+        
+    }, [circleData?.id]);
+    useEffect(() => {
+    if (!circleData?.id) return;
+        const homeRef = doc(collection(db, "circles", String(circleData.id), "home"), "modules");
+        const unsubscribe = onSnapshot(homeRef, (snapshot) => {
+                setMods(snapshot.data().mods)
+            }, (e) => {
+                console.error("Listener failed: ", e);
+            });
+            return unsubscribe;
+        
+    }, [circleData?.id]);
+
 
 
     if(!collectionData){
@@ -37,25 +51,20 @@ export default function Home({circleData}) {
         )
     }
     return(
-        
         <ScrollView style={style.continer}>
             <View style={style.top}>
                 <Text style={style.header}>{circleData?.name}</Text>
             </View>
             <View style={style.content}>
-                <Announcments circleData={circleData} announcments={collectionData?.find(d => d.id === "announcments").Announcments}/>
+                <Announcments circleData={circleData} announcments={collectionData.msgs}/>
                 <View style={style.btns}>
-                    {
-                        collectionData.map((data) => {
-                            if(data.id == "announcments"){
-                                return;
-                            }
-                            //render buttons 
-                            return(
-                                <Button data={data} key={data.id}/>
-                            )
-                        })
-                    }
+                   {
+                    mods?.map((mods) => {
+                        return(
+                            <Btn key={mods.id} data={mods}/>
+                        )
+                    })
+                   }
                 </View>
             </View>
         </ScrollView>
