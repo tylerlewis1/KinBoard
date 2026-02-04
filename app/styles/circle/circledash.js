@@ -61,9 +61,9 @@ export default StyleSheet.create({
     bottom: 0,
     width: wp(100),
     minHeight: hp(45),
-    borderRadius: 50,
     display: "flex",
-    padding: wp(5),
+    paddingHorizontal: wp(5),
+    zIndex: 101
    },
    
    addbtn: {
@@ -77,5 +77,14 @@ export default StyleSheet.create({
    },
    btnBottom: {
     margin: "auto"
+   },
+   addheader: {
+    backgroundColor: "white",
+    width: wp(100),
+    top: -hp(30),
+    height: hp(21),
+    zIndex: 99,
+    borderRadius: 20
+    
    }
 });

@@ -4,7 +4,7 @@ import Entypo from '@expo/vector-icons/Entypo';
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { collection, doc, onSnapshot } from "firebase/firestore";
+import { arrayUnion, collection, doc, onSnapshot, writeBatch } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -72,6 +72,32 @@ export default function CircleDash(){
         return () => unsubscribeUsers();
     }, [id]);
 
+    const addMod = async(type) => {
+        try{
+            const cleanId = Array.isArray(id) ? id[0] : id;
+            const circleRef = doc(db, "circles", String(cleanId));
+            const homeMods = doc(collection(circleRef, "home"), "modules");
+            // const modRef = collection(homeMods, "")
+            // need to do
+            const batch = writeBatch(db);
+            
+            await batch.set(homeMods, {
+                mods: arrayUnion({
+                    id: 1242,
+                    name: type,
+                    type: type
+                })
+            }, {merge: true})
+            batch.commit();
+            SetShowAddModal(false);
+        }catch(e){
+            console.log(e);
+            alert("There was a error adding you module");
+            return;
+        }
+    }
+
+
     return(
         <SafeAreaView>
             <View style={style.container}>
@@ -110,16 +136,19 @@ export default function CircleDash(){
                     visible={showAddModal}
                     onClose={() => SetShowAddModal(false)}
                     >
+                    <View style={style.addheader}>
+                        <Text style={{textAlign: "center", top: hp(2), fontSize: hp(3), zIndex: 10000}}>Add Module</Text>
+                    </View>
                     <ScrollView style={style.addcontent}
                         contentContainerStyle={{
                             flexDirection: "row",
                             flexWrap: "wrap",
                             padding: wp(5),
                             gap: wp(9), 
-                            justifyContent: "center" 
+                            justifyContent: "center" ,
                         }}
                     >
-                        <TouchableOpacity style={style.addbtn}>
+                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("list")}}>
                             <View style={style.btnTop}>
                                 <Ionicons size={hp(7)} style={style.icon} name="list"/>
                             </View>
@@ -128,7 +157,7 @@ export default function CircleDash(){
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={style.addbtn}>
+                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("events")}} >
                             <View style={style.btnTop}>
                                 <Ionicons size={hp(7)} style={style.icon} name="calendar"/>
                             </View>
@@ -137,7 +166,7 @@ export default function CircleDash(){
                             </View>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={style.addbtn}>
+                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("chores")}}>
                             <View style={style.btnTop}>
                                <FontAwesome6 size={hp(7)} style={style.icon} name="broom"/>
                             </View>
@@ -145,8 +174,6 @@ export default function CircleDash(){
                                 <Text>Chores</Text>
                             </View>
                         </TouchableOpacity>
-
-                        
                     </ScrollView>
                 </SlideUpModal>
 
