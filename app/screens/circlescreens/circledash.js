@@ -77,13 +77,19 @@ export default function CircleDash(){
             const cleanId = Array.isArray(id) ? id[0] : id;
             const circleRef = doc(db, "circles", String(cleanId));
             const homeMods = doc(collection(circleRef, "home"), "modules");
-            // const modRef = collection(homeMods, "")
+            const newDocRef = doc(collection(homeMods, type));
             // need to do
             const batch = writeBatch(db);
-            
-            await batch.set(homeMods, {
+            batch.set(newDocRef, {
+                data: [],
+                type: type,
+                circelID: circleData.id,
+                id: newDocRef.id,
+                name: name
+            })
+            batch.set(homeMods, {
                 mods: arrayUnion({
-                    id: 1242,
+                    id: newDocRef.id,
                     name: type,
                     type: type
                 })
@@ -174,6 +180,23 @@ export default function CircleDash(){
                                 <Text>Chores</Text>
                             </View>
                         </TouchableOpacity>
+                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("savings goal")}}>
+                            <View style={style.btnTop}>
+                               <FontAwesome6 size={hp(7)} style={style.icon} name="jar"/>
+                            </View>
+                            <View style={style.btnBottom}>
+                                <Text>Savings goal</Text>
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("contacts")}}>
+                            <View style={style.btnTop}>
+                               <FontAwesome6 size={hp(7)} style={style.icon} name="book"/>
+                            </View>
+                            <View style={style.btnBottom}>
+                                <Text>Contacts</Text>
+                            </View>
+                        </TouchableOpacity>
+
                     </ScrollView>
                 </SlideUpModal>
 

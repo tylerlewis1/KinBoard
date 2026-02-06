@@ -5,7 +5,10 @@ import Home from "../home";
 export default function Content({selection, circleData}) {
     if(selection == "home"){
         return(
-            <ScrollView style={style.container}>
+            <ScrollView 
+                style={style.container}
+                contentContainerStyle={{paddingBottom: hp(7)}} 
+            >
                 <Home circleData={circleData}/>
             </ScrollView>
         )
@@ -45,10 +48,8 @@ const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 const style = StyleSheet.create({
     container: {
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)',
         width: wp(90),
         height: hp(70),
-        backgroundColor: "#dfdede",
         borderRadius: 10,
         marginTop: hp(2),
         left: wp(5)

@@ -16,6 +16,14 @@ export default function Btn({data}){
             return(
                 <Ionicons size={hp(7)} style={style.icon} name="calendar"/>
             )
+        }else if(data.type.startsWith("contacts")){
+            return(
+                <FontAwesome6 size={hp(7)} style={style.icon} name="book"/>
+            )
+        }else if(data.type.startsWith("savings goal")){
+            return(
+                <FontAwesome6 size={hp(7)} style={style.icon} name="jar"/>
+            )
         }
         return(
             <Ionicons size={hp(7)} style={style.icon} name="idk"/>
@@ -29,7 +37,7 @@ export default function Btn({data}){
                 }                
             </View>
             <View style={style.bottom}>
-                <Text style={{textAlign: "center"}}>{(data.name)? (data.name) : ("No name")}</Text>
+                <Text style={{textAlign: "center", fontWeight: "700", top: hp(1)}}>{(data.name)? (data.name) : ("No name")}</Text>
             </View>
         </TouchableOpacity>
     )
@@ -44,10 +52,12 @@ const style = StyleSheet.create({
         backgroundColor: "#ffffff",
         width: wp(25),
         height: hp(15),
-        borderRadius: 10
+        borderRadius: 10,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
     },
     top: {
-        height: hp(11)
+        height: hp(11),
+        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2), 0 1px 5px rgba(0, 0, 0, 0.1)'
     },
     icon: {
         textAlign: 'center',

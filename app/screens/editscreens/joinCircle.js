@@ -27,7 +27,7 @@ export default function JoinCircle(){
         try{
             const circleRef = doc(db, "circles", code);
             const userRef = doc(db, "users", auth.currentUser.uid);
-            const userCollection = doc(db, "circles", code, auth.currentUser.uid, "init");
+            const userCollection = doc(db, "circles", code, "members", auth.currentUser.uid);
             const circleSnap = await getDoc(circleRef);
             if(!circleSnap.exists()){
                 alert("No circle found");
@@ -42,7 +42,10 @@ export default function JoinCircle(){
                 })
             })
             batch.set(userCollection, {
-                name: user.userData.name
+                name: user.userData.name,
+                pfp: user.userData.pfp,
+                role: "member",
+                uid: auth.currentUser.uid
             })
             batch.update(userRef, {
                 circles: arrayUnion(Number(code))

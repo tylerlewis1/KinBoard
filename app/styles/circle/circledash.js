@@ -63,7 +63,7 @@ export default StyleSheet.create({
     minHeight: hp(45),
     display: "flex",
     paddingHorizontal: wp(5),
-    zIndex: 101
+    zIndex: 101,
    },
    
    addbtn: {
