@@ -11,6 +11,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../../firebase";
 import style from "../../styles/circle/circledash";
+import CircleSettings from "../editscreens/circleSettings";
 import Content from "./comps/content";
 import NavBar from "./comps/navbar";
 import SlideUpModal from "./comps/slidemodal";
@@ -19,8 +20,8 @@ export default function CircleDash(){
     const nav = useNavigation();
     const user = useContext(userContext);
     const [circleData, setCircleData] = useState();
+    const [settingsModal, setSettingsModal] = useState();
     const [memberData, setMemberData] = useState();
-    const [isOwner, setIsOwner] = useState(false);
     const [showAddModal, SetShowAddModal] = useState(false);
     const [selection, setSelection] = useState("home");
     const { width, height } = Dimensions.get("window");
@@ -122,6 +123,7 @@ export default function CircleDash(){
                     <Text style={style.name}>{name}</Text>
                     <TouchableOpacity 
                         style={style.settings}
+                        onPress={() => setSettingsModal(true)}
                     >      
                         <Entypo name="cog" size={hp(4.5)} />
                     </TouchableOpacity>
@@ -198,6 +200,12 @@ export default function CircleDash(){
                         </TouchableOpacity>
 
                     </ScrollView>
+                </SlideUpModal>
+                <SlideUpModal
+                    visible={settingsModal}
+                    onClose={() => setSettingsModal(false)}
+                >
+                    <CircleSettings id={id} circleData={circleData} memberData={memberData}/>
                 </SlideUpModal>
 
         </SafeAreaView>

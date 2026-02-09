@@ -87,14 +87,14 @@ export default function AddCircle(){
                 role: "Owner"
             });
             batch.set(annRef, {
-                msgs:[
+                msgs:
                     {
                        msg: "Welcome to Kin Board!",
                        pfp: "",
                        date: new Date(),
                        who: "Kin Board"
                     }
-                ]
+                
             })
             batch.set(homeMods, {
                 mods:[

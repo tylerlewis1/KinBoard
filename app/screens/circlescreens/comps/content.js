@@ -49,7 +49,7 @@ const hp = (percent) => height * (percent / 100);
 const style = StyleSheet.create({
     container: {
         width: wp(90),
-        height: hp(70),
+        height: hp(73),
         borderRadius: 10,
         marginTop: hp(2),
         left: wp(5)

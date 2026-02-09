@@ -19,6 +19,7 @@ export default StyleSheet.create({
         height: hp(7),
         borderRadius: 100,
         marginLeft: wp(2),
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
     },
     name: {
         paddingLeft: wp(3),

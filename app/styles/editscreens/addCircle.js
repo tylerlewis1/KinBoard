@@ -51,7 +51,7 @@ export default StyleSheet.create({
         margin: "auto",
         marginBottom: hp(10),
         marginTop: hp(10),
-        borderRadius: 100
+        borderRadius: 100,
     }
    
     

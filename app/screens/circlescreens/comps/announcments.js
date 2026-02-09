@@ -1,8 +1,8 @@
 import { userContext } from '@/app/background/Users';
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from 'expo-image';
-import { arrayUnion, collection, doc, updateDoc } from 'firebase/firestore';
-import { useContext, useState } from "react";
+import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -17,6 +17,34 @@ export default function Announcments({circleData, announcments}) {
     const [option, setOption] = useState("");
     const [type, setType] = useState(false);
     const [modalVis, setModalVis] = useState(false);
+    useEffect(() =>{
+        setHasVoted(announcments?.voated?.includes(user.userData.uid));
+    }, [announcments]);
+    const vote = async(id) => {
+        try{
+            const index = announcments.options.findIndex(option => option.id === id);
+            let newData = announcments;
+            newData.options[index] = {
+                id: newData.options[index].id,
+                txt: newData.options[index].txt,
+                votes: newData.options[index].votes + 1
+            }
+            newData.voated.push(user.userData.uid);
+            // setHasVoted(true);
+            const announcmentDoc = doc(db, "circles", String(circleData.id));
+            const announcmentsDoc = doc(collection(announcmentDoc, "home"), "announcements");
+            console.log(newData)
+            await setDoc(announcmentsDoc, {
+                msgs: newData
+                
+            });
+            newData = null;
+
+
+        }catch(e){
+            console.log(e);
+        }
+    }
     const send = async() => {
         if(msg == "" && !type){
             alert("You must enter a message");
@@ -30,23 +58,23 @@ export default function Announcments({circleData, announcments}) {
         try{
             if(!type){
                 await updateDoc(announcmentsDoc, {
-                    msgs: arrayUnion({
+                    msgs: {
                         date: new Date(),
                         msg: msg,
                         who: user.userData.name,
                         pfp: user.userData.pfp,
-                    })
+                    }
                 })
             } else {
                 await updateDoc(announcmentsDoc, {
-                    msgs: arrayUnion({
+                    msgs: {
                         date: new Date(),
                         msg: question,
                         who: user.userData.name,
                         pfp: user.userData.pfp,
                         options: options,
                         voated: []
-                    })
+                    }
                 })
             }
         }catch(e){
@@ -200,44 +228,36 @@ export default function Announcments({circleData, announcments}) {
             <View>
                 
                 <View style={style.header}>
-                    {(announcments[announcments.length -1].pfp) ? (
-                        <Image style={style.img} source={{uri: announcments[announcments.length -1].pfp}}/>
+                    {(announcments.pfp) ? (
+                        <Image style={style.img} source={{uri: announcments.pfp}}/>
                     ):(
                         <Image cachePolicy="disk" style={style.img} source={require("../../../../assets/images/logotb.png")}/>
                     )}
-                    <Text style={style.name}>{announcments[announcments.length -1].who}</Text>
+                    <Text style={style.name}>{announcments.who}</Text>
                     <TouchableOpacity style={style.post} onPress={() => {setModalVis(true)}}>
                         <Text>Create</Text>
                     </TouchableOpacity>
                 </View>
                 <View style={style.msg}>
-                    <Text style={style.msgtxt}>{announcments[announcments.length -1].msg}</Text>
+                    <Text style={style.msgtxt}>{announcments.msg}</Text>
                 </View>
-                    {(announcments[announcments.length - 1].options)? (
+                    {(announcments.options)? (
                         <>
                         {
-                            announcments[announcments.length - 1].options.map((option) => {
-                                if(!hasVoted){
+                            announcments.options.map((option) => {
+                               
                                     return(
-                                        <TouchableOpacity key={option.key} style={style.option}>
+                                        <TouchableOpacity key={option.id} style={style.option} onPress={() => {vote(option.id)}} disabled={hasVoted}>
                                                 <Text>{option.txt}</Text>
                                                 <Text style={{position: "absolute", right: wp(4), top: hp(1)}}>{option.votes}</Text>
                                         </TouchableOpacity> 
                                         
                                     )
-                                } else {
-                                    return(
-                                        <View key={option.key} style={style.option}>
-                                                <Text>{option.txt}</Text>
-                                                <Text style={{position: "absolute", right: wp(4), top: hp(1)}}>{option.votes}</Text>
-                                        </View> 
-                                    )
-                                }
                             })
                         }
                         </>
                     ):(<></>)}
-                <Text style={{paddingVertical: hp(1)}}>{(announcments[announcments.length - 1].date.toDate()).toLocaleString()}</Text>
+                <Text style={{paddingVertical: hp(1)}}>{(announcments.date.toDate()).toLocaleString()}</Text>
             </View>
         </View>
     );
@@ -266,12 +286,14 @@ const style = StyleSheet.create({
     },
     msgtxt: {
         fontSize: hp(2),
-        fontWeight: "400"
+        fontWeight: "400",
+        
     },
     img: {
         width: hp(4),
         height: hp(4),
-        borderRadius: 1000
+        borderRadius: 1000,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
     },
     name: {
         marginTop: hp(1),
@@ -352,7 +374,9 @@ const style = StyleSheet.create({
         margin: "auto",
         padding: hp(1),
         display: "flex",
-        flexDirection: "row"
+        flexDirection: "row",
+        borderRadius: 10,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
     }, 
     delbtn: {
         backgroundColor: "red",

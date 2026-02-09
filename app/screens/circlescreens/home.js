@@ -1,6 +1,6 @@
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { db } from "../../../firebase";
 import Announcments from "./comps/announcments";
@@ -52,9 +52,9 @@ export default function Home({circleData}) {
     }
     return(
         <ScrollView style={style.continer}>
-            <View style={style.top}>
+            {/* <View style={style.top}>
                 <Text style={style.header}>{circleData?.name}</Text>
-            </View>
+            </View> */}
             <View style={style.content}>
                 <Announcments circleData={circleData} announcments={collectionData.msgs}/>
                 <View style={style.btns}>

@@ -61,7 +61,8 @@ const style = StyleSheet.create({
     },
     icon: {
         textAlign: 'center',
-        margin: "auto"
+        margin: "auto",
+        color: "#575555"
     }
 
 });
