@@ -6,10 +6,11 @@ import { useContext, useState } from "react";
 import { Dimensions, Modal, Text, TouchableOpacity, View } from "react-native";
 import { Pressable } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import style from "../../styles/main/dash";
+import useStyles from "../../styles/main/dash";
 import HouseHolds from "./comps/households";
 export default function Dash() {
     const nav = useNavigation();
+    const style = useStyles();
     const [modalVisible, setModalVisible] = useState(false);
     const { width, height } = Dimensions.get("window");
     const wp = (percent) => width * (percent / 100);
@@ -25,9 +26,8 @@ export default function Dash() {
             return("Good Evening");
         }
     } 
-
     return(
-        <SafeAreaView>
+        <SafeAreaView style={style.content}>
             <Modal
                 animationType="fade"
                 transparent={true}
@@ -65,7 +65,7 @@ export default function Dash() {
             </Modal>
             <View style={style.header}>
             </View>
-            <View style={style.content}>
+            <View>
                 <View style={style.top}>
                     <Text style={[style.greeting, {}]}>{getTimeOfDay()} <Text style={{color: "#2EC4B6"}}>{user.userData.name}!</Text></Text>
                      
@@ -73,7 +73,7 @@ export default function Dash() {
                         onPress={() => {nav.navigate("Account")}}
                         style={style.settings}
                     >      
-                        <Entypo name="cog" size={hp(4.5)} />
+                        <Entypo name="cog" color={style.txt} size={hp(4.5)} />
                     </TouchableOpacity>
                 </View>
                 <View style={style.main}>

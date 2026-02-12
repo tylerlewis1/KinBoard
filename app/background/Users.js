@@ -1,15 +1,12 @@
 import { doc, onSnapshot } from "firebase/firestore";
 import { createContext, useEffect, useState } from "react";
 import { auth, db } from "../../firebase";
-
 export const userContext = createContext();
-
 export default function UserProvider({ children }) {
     const [userData, setUserData] = useState(null);
-
+   
     useEffect(() => {
         let unsubscribeDoc = null;
-
         // 1. Listen for Auth State changes
         const unsubscribeAuth = auth.onAuthStateChanged((user) => {
             if (user) {

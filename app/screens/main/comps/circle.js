@@ -1,9 +1,12 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { router, useNavigation } from "expo-router";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-export default function Circle({id, name, cover}) {
+import { Dimensions, Text, TouchableOpacity, View } from "react-native";
+export default function Circle({id, name, cover, style}) {
     const nav = useNavigation();
+    const { width, height } = Dimensions.get("window");
+    const wp = (percent) => width * (percent / 100);
+    const hp = (percent) => height * (percent / 100);
     return(
         <TouchableOpacity 
             style={style.btn}
@@ -16,7 +19,7 @@ export default function Circle({id, name, cover}) {
         >
             <View style={{ height: hp(13)}}>
                 {(cover == "" || cover == null) ? (
-                    <Ionicons name="home" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />    
+                    <Ionicons color={style.iconc} name="home" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />    
                 ): (
                     <Image cachePolicy="disk" source={{uri: cover}} style={{width: hp(9), height: hp(9), display: "block",borderRadius: 100, margin: "auto"}}/>
                 )}
@@ -28,23 +31,5 @@ export default function Circle({id, name, cover}) {
     )
 }
 
-const { width, height } = Dimensions.get("window");
-const wp = (percent) => width * (percent / 100);
-const hp = (percent) => height * (percent / 100);
-const style = StyleSheet.create({
-    btn: {
-        backgroundColor: "#f0eeee",
-        width: wp(25),
-        height: hp(20),
-        borderRadius: 20,
-        
-   },
-   txt: {
-        textAlign: "center",
-        fontWeight: "bold",
-        marginTop: hp(1.5),
-        fontSize: wp(3),
-        width: wp(25),
-   },
 
-});
+

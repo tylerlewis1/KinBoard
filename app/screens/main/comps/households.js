@@ -1,14 +1,19 @@
+import useAppColors from '@/app/background/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { arrayRemove, doc, getDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from 'react';
 import { ActivityIndicator, Dimensions, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { auth, db } from "../../../../firebase";
 import Circle from "./circle";
+const { width, height } = Dimensions.get("window");
+const wp = (percent) => width * (percent / 100);
+const hp = (percent) => height * (percent / 100);
+
 export default function HouseHolds({userdata, setModalVisible}){
+    const style = useStyle();
     const [circles, setCircles] = useState([]);
     const [loading, setLoading] = useState(true);
     console.log(userdata);
-    
     useEffect(() => {
         const getCircleData = async() =>{    
             setCircles([]);
@@ -63,62 +68,70 @@ export default function HouseHolds({userdata, setModalVisible}){
                     return;
                 }
                 return( 
-                    <Circle key={data?.id} name={data?.name} cover={data?.cover} id={data?.id}/>
+                    <Circle key={data?.id} name={data?.name} cover={data?.cover} id={data?.id} style={style}/>
                 )
                })}
                 <TouchableOpacity style={style.btn} onPress={() => {setModalVisible(true)}}>
-                    <Ionicons name="add" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />
+                    <Ionicons name="add" size={hp(10)} color={style.iconc} style={style.icon} />
                     <Text style={style.txt}>Add Circle</Text>
                 </TouchableOpacity>
             </ScrollView>
         </View>
     );
 }
-const { width, height } = Dimensions.get("window");
-const wp = (percent) => width * (percent / 100);
-const hp = (percent) => height * (percent / 100);
-const style = StyleSheet.create({
+
+function useStyle() {
+    const colors = useAppColors();
+    return StyleSheet.create({
     lodaing: {
         marginTop: hp(10)
     },
-   content: {
-    backgroundColor: "#e2e2e2",
-    position: "absolute",
-    width: wp(100),
-    height: hp(90),
-    padding: wp(5),
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
-   },
-   txt: {
-    textAlign: "center",
-    fontWeight: "bold",
-    marginTop: hp(1.5),
-    fontSize: wp(4)
-   },
-   header: {
-    fontSize: hp(4),
-    fontWeight: "bold",
-    paddingBottom: hp(2)
-   },
-   btn: {
-    backgroundColor: "#f0eeee",
-    width: wp(25),
-    height: hp(20),
-    borderRadius: 20,
-   },
-   btnscroll: {
-    display: "flex",
-    flexBasis: "50%",
-    flexWrap: "wrap",
-    width: wp(90),
-    
-    
-   },
-   gridContainer: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: wp(6), 
-        justifyContent: 'flex-start',
+    content: {
+        backgroundColor: colors.compbg,
+        position: "absolute",
+        width: wp(100),
+        height: hp(90),
+        padding: wp(5),
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
+    },
+    txt: {
+        textAlign: "center",
+        fontWeight: "bold",
+        marginTop: hp(1.5),
+        fontSize: wp(4),
+        color: colors.txt
+    },
+    header: {
+        fontSize: hp(4),
+        fontWeight: "bold",
+        paddingBottom: hp(2),
+        color: colors.txt
+    },
+    btn: {
+        backgroundColor: colors.compbgl,
+        width: wp(25),
+        height: hp(20),
+        borderRadius: 20,
+    },
+    btnscroll: {
+        display: "flex",
+        flexBasis: "50%",
+        flexWrap: "wrap",
+        width: wp(90),
+        
         
     },
-});
+    gridContainer: {
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            gap: wp(6), 
+            justifyContent: 'flex-start',
+            
+        },
+    icon: {
+        textAlign: "center", 
+        marginTop: hp(3),
+    },
+    iconc: colors.txt 
+    });
+}

@@ -1,3 +1,4 @@
+import useAppColors from "@/app/background/Colors";
 import { collection, doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, View } from "react-native";
@@ -6,6 +7,7 @@ import { db } from "../../../firebase";
 import Announcments from "./comps/announcments";
 import Btn from "./comps/button";
 export default function Home({circleData}) {
+    const colors = useAppColors();
     const [collectionData, setCollectionData] = useState(null);
     const [mods, setMods] = useState(null);
     //get announcments
@@ -56,12 +58,12 @@ export default function Home({circleData}) {
                 <Text style={style.header}>{circleData?.name}</Text>
             </View> */}
             <View style={style.content}>
-                <Announcments circleData={circleData} announcments={collectionData.msgs}/>
+                <Announcments circleData={circleData} colors={colors} announcments={collectionData.msgs}/>
                 <View style={style.btns}>
                    {
                     mods?.map((mods) => {
                         return(
-                            <Btn key={mods.id} data={mods}/>
+                            <Btn colors={colors} key={mods.id} data={mods}/>
                         )
                     })
                    }
@@ -89,7 +91,7 @@ const style = StyleSheet.create({
         
     },
     btns: {
-        padding: hp(1),
+        paddingTop: hp(3),
         display: "flex",
         flexDirection: "row",
         gap: wp(5),

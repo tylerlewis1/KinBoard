@@ -15,7 +15,7 @@ export default function Index() {
   const user = useContext(userContext);
   const Stack = createNativeStackNavigator();
   const opacity = useRef(new Animated.Value(1)).current;
-
+  
   useEffect(() => {
       setTimeout(() => {
         Animated.timing(opacity, {

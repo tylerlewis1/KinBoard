@@ -5,15 +5,16 @@ import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { auth } from "../../../../firebase";
 import { userContext } from "../../../background/Users";
-export default function NavBar({selection, setSelection, memberData}){
+export default function NavBar({selection, setSelection, memberData, colors}){
     const user = useContext(userContext);
+    const style = useStyle(colors);
     return(
         <ScrollView style={style.container} horizontal={true}>
             <TouchableOpacity
             style={(selection == "home")? (style.btnactive):(style.btn)}
             onPress={() => setSelection("home")}
             >
-                <Ionicons name="home" size={hp(5)} style={{textAlign: "center", marginTop: hp(1.3)}}/>
+                <Ionicons color={style.txt} name="home" size={hp(5)} style={{textAlign: "center", marginTop: hp(1.3)}}/>
             </TouchableOpacity>
             
             <TouchableOpacity
@@ -52,7 +53,7 @@ export default function NavBar({selection, setSelection, memberData}){
             style={(selection == "add")? (style.btnactive):(style.btn)}
             onPress={() => setSelection("add")}
             >
-                <Text style={{textAlign: "center", fontSize: hp(5.9)}}>+</Text>
+                <Text color={style.txt} style={{textAlign: "center", fontSize: hp(5.9)}}>+</Text>
            </TouchableOpacity>
             
         </ScrollView>
@@ -63,12 +64,13 @@ export default function NavBar({selection, setSelection, memberData}){
 const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
-const style = StyleSheet.create({
+function useStyle(colors) {
+return StyleSheet.create({
     container: {
         display: "flex",
         flexDirection: "row",
         flexWrap: "wrap",
-        backgroundColor: "#dfdede",
+        backgroundColor: colors.compbg,
         width: wp(90),
         marginTop: hp(1),
         borderRadius: 10,
@@ -79,7 +81,7 @@ const style = StyleSheet.create({
     btn: {
         width: hp(8),
         height: hp(8),
-        backgroundColor: "#ffffff",
+        backgroundColor: colors.compbgd,
         display: "block",
         margin: hp(1),
         borderRadius: 1000
@@ -87,7 +89,7 @@ const style = StyleSheet.create({
     btnactive: {
         width: hp(8),
         height: hp(8),
-        backgroundColor: "#2EC4B6",
+        backgroundColor: colors.accent,
         display: "block",
         margin: hp(1),
         borderRadius: 1000
@@ -97,6 +99,8 @@ const style = StyleSheet.create({
         height: hp(7),
         borderRadius: 1000,
         margin: "auto"
-    }
+    },
+    txt: colors.txt
 
 });
+}

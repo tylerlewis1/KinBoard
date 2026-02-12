@@ -10,13 +10,14 @@ import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../../firebase";
-import style from "../../styles/circle/circledash";
+import useStyles from "../../styles/circle/circledash";
 import CircleSettings from "../editscreens/circleSettings";
 import Content from "./comps/content";
 import NavBar from "./comps/navbar";
 import SlideUpModal from "./comps/slidemodal";
 export default function CircleDash(){
     const { id, name, cover } = useLocalSearchParams(); 
+    const style = useStyles();
     const nav = useNavigation();
     const user = useContext(userContext);
     const [circleData, setCircleData] = useState();
@@ -106,12 +107,12 @@ export default function CircleDash(){
 
 
     return(
-        <SafeAreaView>
-            <View style={style.container}>
+        <SafeAreaView style={style.container}> 
+            <View>
                 
                 <View style={style.header}>
                     <TouchableOpacity onPress={() => {nav.goBack()}}>
-                        <Ionicons name="arrow-back" size={hp(2.5)} style={style.back} />
+                        <Ionicons color={style.iconc} name="arrow-back" size={hp(2.5)} style={style.back}  />
                     </TouchableOpacity>
                     {(circleData?.cover != "" && circleData?.cover != null)? (
                         <Image cachePolicy="disk" style={style.img} source={{uri: circleData?.cover}}/>   
@@ -125,10 +126,10 @@ export default function CircleDash(){
                         style={style.settings}
                         onPress={() => setSettingsModal(true)}
                     >      
-                        <Entypo name="cog" size={hp(4.5)} />
+                        <Entypo color={style.iconc} name="cog" size={hp(4.5)} />
                     </TouchableOpacity>
                 </View>    
-                <NavBar selection={selection} setSelection={setSelection} memberData={memberData}/>
+                <NavBar colors={style.colors} selection={selection} setSelection={setSelection} memberData={memberData}/>
                 <Content selection={selection} circleData={circleData}/>
                 {(selection == "home" || selection == auth.currentUser.uid)? (
                     <TouchableOpacity style={style.add} 
@@ -205,7 +206,7 @@ export default function CircleDash(){
                     visible={settingsModal}
                     onClose={() => setSettingsModal(false)}
                 >
-                    <CircleSettings id={id} circleData={circleData} memberData={memberData}/>
+                    <CircleSettings colors={style.colors} id={id} circleData={circleData} memberData={memberData}/>
                 </SlideUpModal>
 
         </SafeAreaView>

@@ -1,13 +1,18 @@
 
 import { Dimensions, StyleSheet } from "react-native";
-
+import useAppColors from "../../background/Colors.js";
 const { width, height } = Dimensions.get("window");
+
+
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
+export default function useStyles() {
 
-export default StyleSheet.create({
+const colors = useAppColors();
+
+return StyleSheet.create({
    container: {
-   
+        backgroundColor: colors.background
     },
     header: {
         display: "flex",
@@ -25,17 +30,12 @@ export default StyleSheet.create({
         paddingLeft: wp(3),
         paddingTop: hp(2.8),
         fontSize: hp(2),
+        color: colors.txt,
         fontWeight: 'bold'
     },
     back: {
         marginTop: hp(2.5),
         paddingHorizontal: wp(3)
-    },
-    hr: {
-        width: wp(100),
-        height: 2,
-        backgroundColor: "#d6d3d3",
-        marginTop: hp(1),
     },
     settings: {
       position: "absolute",
@@ -46,7 +46,7 @@ export default StyleSheet.create({
     position: "absolute",
     bottom: hp(1),
     right: wp(6),
-    backgroundColor: "#2EC4B6",
+    backgroundColor: colors.accent,
     width: hp(7),
     height: hp(7),
     borderRadius: 10000
@@ -54,10 +54,11 @@ export default StyleSheet.create({
    txt: {
     fontSize: hp(5),
     textAlign: "center",
-    top: hp(.2)
+    top: hp(.2),
+    color: colors.txt,
    },
    addcontent: {
-    backgroundColor: "white",
+    backgroundColor: colors.background,
     position: "absolute",
     bottom: 0,
     width: wp(100),
@@ -68,7 +69,7 @@ export default StyleSheet.create({
    },
    
    addbtn: {
-    backgroundColor: "#e0dddd",
+    backgroundColor: colors.background,
     width: wp(20),
     height: wp(30),
     borderRadius: 10,
@@ -80,12 +81,14 @@ export default StyleSheet.create({
     margin: "auto"
    },
    addheader: {
-    backgroundColor: "white",
+    backgroundColor: colors.background,
     width: wp(100),
     top: -hp(30),
     height: hp(21),
     zIndex: 99,
     borderRadius: 20
-    
-   }
+   },
+   iconc: colors.txt,
+   colors: colors
 });
+}

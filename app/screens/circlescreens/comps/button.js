@@ -1,68 +1,88 @@
-import { Ionicons } from "@expo/vector-icons";
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { Entypo, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
+import React from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-export default function Btn({data}){
-    console.log(data.id)
-    const getIcon = () => {
-        if(data.type.startsWith("chores")){
-            return(
-                <FontAwesome6 size={hp(7)} style={style.icon} name="broom"/>
-            )
-        } else if(data.type.startsWith("list")){
-            return(
-                <Ionicons size={hp(7)} style={style.icon} name="list"/>
-            )
-        }else if(data.type.startsWith("events")){
-            return(
-                <Ionicons size={hp(7)} style={style.icon} name="calendar"/>
-            )
-        }else if(data.type.startsWith("contacts")){
-            return(
-                <FontAwesome6 size={hp(7)} style={style.icon} name="book"/>
-            )
-        }else if(data.type.startsWith("savings goal")){
-            return(
-                <FontAwesome6 size={hp(7)} style={style.icon} name="jar"/>
-            )
-        }
-        return(
-            <Ionicons size={hp(7)} style={style.icon} name="idk"/>
-        )
-    }
-    return(
-          <TouchableOpacity style={style.button}>
-            <View style={style.top}>
-                {
-                    getIcon()
-                }                
-            </View>
-            <View style={style.bottom}>
-                <Text style={{textAlign: "center", fontWeight: "700", top: hp(1)}}>{(data.name)? (data.name) : ("No name")}</Text>
-            </View>
-        </TouchableOpacity>
-    )
-
-}
 
 const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
-const style = StyleSheet.create({
-    button: {
-        backgroundColor: "#ffffff",
-        width: wp(25),
-        height: hp(15),
-        borderRadius: 10,
-        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
-    },
-    top: {
-        height: hp(11),
-        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2), 0 1px 5px rgba(0, 0, 0, 0.1)'
-    },
-    icon: {
-        textAlign: 'center',
-        margin: "auto",
-        color: "#575555"
-    }
+export default function Btn({ data, colors}) {
+    
+    const style = StyleSheet.create({
+        pillContainer: {
+            backgroundColor: colors.compbgl, // iOS Secondary System Background
+            width: wp(90),  
+            margin: "auto",           
+            height: hp(9),
+            borderRadius: 40,          // Complete pill shape
+            flexDirection: "row",      // Horizontal layout
+            alignItems: "center",
+            paddingHorizontal: wp(4),
+            alignSelf: 'center',
+            // Modern subtle border instead of heavy shadow
+            borderWidth: 1,
+            borderColor: colors.compbg,
+        },
+        iconCircle: {
+            width: hp(6),
+            height: hp(6),
+            borderRadius: hp(3),
+            backgroundColor: colors.compbg, // Slightly lighter circle for the icon
+            justifyContent: "center",
+            alignItems: "center",
+        },
+        textContainer: {
+            marginLeft: wp(4),
+            flex: 1,
+        },
+        buttonText: {
+            color: colors.txt,
+            fontSize: hp(2),
+            fontWeight: "600",
+            textTransform: "capitalize",
+        },
+        subText: {
+            color: "#8E8E93",
+            fontSize: hp(1.4),
+            marginTop: 2,
+        },
+        arrow: {
+            marginRight: wp(2),
+        }
+    });
+    
+    const getIconDetails = () => {
+        const size = hp(3.5);
+        const color = colors.txt;
+        
+        if (data.type.startsWith("chores")) {
+            return { component: <MaterialIcons size={size} color={color} name="check-circle-outline" /> };
+        } else if (data.type.startsWith("list")) {
+            return { component: <Entypo size={size} color={color} name="list" /> };
+        } else if (data.type.startsWith("events")) {
+            return { component: <Ionicons size={size} color={color} name="calendar-outline" /> };
+        } else if (data.type.startsWith("contacts")) {
+            return { component: <MaterialIcons size={size} color={color} name="people-outline" /> };
+        } else if (data.type.startsWith("savings goal")) {
+            return { component: <FontAwesome5 size={size} color={color} name="piggy-bank" /> };
+        }
+        return { component: <Ionicons size={size} color={color} name="ellipsis-horizontal" /> };
+    };
 
-});
+    const icon = getIconDetails().component;
+
+    return (
+        <TouchableOpacity style={style.pillContainer} activeOpacity={0.8}>
+            <View style={style.iconCircle}>
+                {icon}
+            </View>
+            <View style={style.textContainer}>
+                <Text style={style.buttonText}>
+                    {data.name ? data.name : "No name"}
+                </Text>
+                <Text style={style.subText}>View details</Text>
+            </View>
+            <Ionicons name="chevron-forward" size={18} color="#444" style={style.arrow} />
+        </TouchableOpacity>
+    );
+}
+
