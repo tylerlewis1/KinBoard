@@ -12,7 +12,8 @@ const colors = useAppColors();
 
 return StyleSheet.create({
    container: {
-        backgroundColor: colors.background
+        backgroundColor: colors.background,
+        height: hp(100)
     },
     header: {
         display: "flex",

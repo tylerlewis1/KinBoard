@@ -11,7 +11,8 @@ export default function Btn({ data, colors}) {
         pillContainer: {
             backgroundColor: colors.compbgl, // iOS Secondary System Background
             width: wp(90),  
-            margin: "auto",           
+            margin: "auto",    
+            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)',       
             height: hp(9),
             borderRadius: 40,          // Complete pill shape
             flexDirection: "row",      // Horizontal layout

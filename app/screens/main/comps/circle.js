@@ -21,11 +21,14 @@ export default function Circle({id, name, cover, style}) {
                 {(cover == "" || cover == null) ? (
                     <Ionicons color={style.iconc} name="home" size={hp(10)} style={{textAlign: "center", marginTop: hp(3)}} />    
                 ): (
-                    <Image cachePolicy="disk" source={{uri: cover}} style={{width: hp(9), height: hp(9), display: "block",borderRadius: 100, margin: "auto"}}/>
+                    <View>
+                    <Image cachePolicy="disk" source={{uri: cover}} style={{width: wp(90), height: hp(13), display: "block", margin: "auto", borderRadius: 10}} blurRadius={15}/>
+                    <Image cachePolicy="disk" source={{uri: cover}} style={{width: hp(10), height: hp(10), display: "block", margin: "auto", borderRadius: 1000, top: hp(-7)}}/>
+                    </View>
                 )}
             </View>
-            <View>
-                <Text style={style.txt}>{name}</Text>
+            <View style={{height: hp(7)}}>
+                <Text style={[style.txt, {marginVertical: "auto"}]}>{name}</Text>
             </View>
         </TouchableOpacity>
     )

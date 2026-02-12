@@ -53,7 +53,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
         }, content:{
             padding: wp(5),
         }, cover: {
-            width: wp(15),
+            width: hp(7),
             height: hp(7),
             borderRadius: 1000
             
@@ -79,7 +79,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
         }, btntxt: {
             textAlign: "center",
             fontWeight: "700",
-            fontSize: wp(5),
+            fontSize: hp(3),
             color: colors.txt
         },date: {
             color: colors.txt
@@ -89,7 +89,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
 
     if(isOwner){
         return(
-            <View style={[style.container, {height: hp(42)}]}>
+            <View style={[style.container, {minHeight: hp(45)}]}>
                 <View style={style.content}>
                     <View style={style.header}>
                         <TouchableOpacity

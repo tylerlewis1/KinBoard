@@ -97,9 +97,9 @@ function useStyle() {
     txt: {
         textAlign: "center",
         fontWeight: "bold",
-        marginTop: hp(1.5),
         fontSize: wp(4),
-        color: colors.txt
+        color: colors.txt,
+        paddingTop: hp(2)
     },
     header: {
         fontSize: hp(4),
@@ -109,9 +109,10 @@ function useStyle() {
     },
     btn: {
         backgroundColor: colors.compbgl,
-        width: wp(25),
+        width: wp(90),
         height: hp(20),
         borderRadius: 20,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
     },
     btnscroll: {
         display: "flex",
@@ -122,11 +123,7 @@ function useStyle() {
         
     },
     gridContainer: {
-            flexDirection: 'row',
-            flexWrap: 'wrap',
             gap: wp(6), 
-            justifyContent: 'flex-start',
-            
         },
     icon: {
         textAlign: "center", 

@@ -392,6 +392,7 @@ function useStyle(colors){
 return StyleSheet.create({
     container: {
         paddingVertical: hp(1),
+        marginHorizontal: "auto"
     },
     loadingContainer: {
         paddingVertical: hp(4),
@@ -400,14 +401,15 @@ return StyleSheet.create({
     },
     card: {
         backgroundColor: colors.compbg,
+        borderWidth: 1,
+        borderColor: colors.compbgd,
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)',
         borderRadius: 20,
         padding: hp(2),
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.15,
         shadowRadius: 12,
         elevation: 5,
-        width: wp(90)
+        width: wp(90),
+        
     },
     cardHeader: {
         flexDirection: "row",
