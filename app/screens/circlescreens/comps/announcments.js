@@ -1,16 +1,16 @@
 import { userContext } from '@/app/background/Users';
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from 'expo-image';
-import { collection, doc, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, runTransaction, updateDoc } from 'firebase/firestore';
 import { useContext, useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import { FlatList, TextInput } from 'react-native-gesture-handler';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { db } from "../../../../firebase";
 
+
 export default function Announcements({circleData, announcments, colors}) {
     const user = useContext(userContext);
-    const [data, setData] = useState(null);
     const [msg, setMsg] = useState("");
     const [hasVoted, setHasVoted] = useState(false);
     const [question, setQuestion] = useState("");
@@ -25,24 +25,44 @@ export default function Announcements({circleData, announcments, colors}) {
     
     const vote = async(id) => {
         try {
-            const index = announcments.options.findIndex(option => option.id === id);
-            let newData = announcments;
-            newData.options[index] = {
-                id: newData.options[index].id,
-                txt: newData.options[index].txt,
-                votes: newData.options[index].votes + 1
-            }
-            newData.voated.push(user.userData.uid);
+            // Find which option index to increment
+            const optionIndex = announcments.options.findIndex(option => option.id === id);
             
             const announcmentDoc = doc(db, "circles", String(circleData.id));
             const announcmentsDoc = doc(collection(announcmentDoc, "home"), "announcements");
             
-            await setDoc(announcmentsDoc, {
-                msgs: newData
+            // Use Firestore transaction for atomic update
+            await runTransaction(db, async (transaction) => {
+                const docSnapshot = await transaction.get(announcmentsDoc);
+                
+                if (!docSnapshot.exists()) {
+                    throw new Error("Document does not exist!");
+                }
+                
+                const currentData = docSnapshot.data().msgs;
+                
+                // Check if already voted
+                if (currentData.voated?.includes(user.userData.uid)) {
+                    throw new Error("Already voted!");
+                }
+                
+                // Increment the vote count
+                currentData.options[optionIndex].votes += 1;
+                currentData.voated = [...(currentData.voated || []), user.userData.uid];
+                
+                // Write back
+                transaction.update(announcmentsDoc, {
+                    msgs: currentData
+                });
             });
-            newData = null;
+        
         } catch(e) {
-            console.log(e);
+            console.error('Vote failed:', e);
+            if (e.message === "Already voted!") {
+                alert("You've already voted in this poll.");
+            } else {
+                alert("Failed to record your vote. Please try again.");
+            }
         }
     }
     
@@ -303,7 +323,7 @@ export default function Announcements({circleData, announcments, colors}) {
                         style={style.createBtn} 
                         onPress={() => setModalVis(true)}
                     >
-                        <Ionicons name="add" size={hp(2.5)} color="#FFFFFF"/>
+                        <Ionicons name="add" size={hp(2.5)} color={colors.txt}/>
                         <Text style={style.createBtnText}>Create</Text>
                     </TouchableOpacity>
                 </View>
@@ -404,7 +424,7 @@ return StyleSheet.create({
         width: hp(5),
         height: hp(5),
         borderRadius: hp(2.5),
-        backgroundColor: "#3A3A3C",
+        backgroundColor: colors.compbgl,
     },
     userDetails: {
         marginLeft: wp(3),

@@ -1,11 +1,13 @@
+import useAppColors from "@/app/background/Colors";
 import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import QRCode from 'react-native-qrcode-svg';
 import Home from "../home";
 export default function Content({selection, circleData}) {
+    const style = useStyles();
     if(selection == "home"){
         return(
-            <ScrollView 
+            <ScrollView showsVerticalScrollIndicator={false}
                 style={style.container}
                 contentContainerStyle={{paddingBottom: hp(7)}} 
             >
@@ -46,24 +48,29 @@ export default function Content({selection, circleData}) {
 const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
-const style = StyleSheet.create({
+function useStyles(){
+
+const colors = useAppColors();
+return StyleSheet.create({
     container: {
         width: wp(90),
         height: hp(73),
         borderRadius: 10,
         marginTop: hp(2),
-        left: wp(5)
+        left: wp(5),
     }, 
     title: {
         textAlign: "center",
         fontSize: wp(6),
         fontWeight: "bold",
-        padding: hp(3.5)
+        padding: hp(3.5),
+        color: colors.txt
     }, 
     code: {
         fontSize: wp(5),
         textAlign:"center",
-        padding: hp(5)
+        padding: hp(5),
+        color: colors.txt
     },
     qr: {
         padding: wp(5),
@@ -75,3 +82,4 @@ const style = StyleSheet.create({
     }
 
 });
+}

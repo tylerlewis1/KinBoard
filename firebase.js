@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { initializeApp } from "firebase/app";
 import { getReactNativePersistence, initializeAuth } from "firebase/auth";
 import { initializeFirestore, persistentLocalCache } from "firebase/firestore";
+import { getFunctions } from "firebase/functions";
 import { getStorage } from "firebase/storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
@@ -29,4 +30,5 @@ export const auth = initializeAuth(app, {
 export const db = initializeFirestore(app, {
   localCache: persistentLocalCache()
 });
+export const functions = getFunctions(app);
 export const storage = getStorage(app);

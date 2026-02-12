@@ -1,9 +1,13 @@
+import { functions } from '@/firebase';
 import { Image } from "expo-image";
+import { useNavigation } from "expo-router";
+import { httpsCallable } from "firebase/functions";
 import { useState } from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { auth } from "../../../firebase";
 export default function CircleSettings({id, circleData, memberData, colors}){
     const [isOwner, setIsOwner] = useState(false);
+    const nav = useNavigation();
     useState(() => {
         setIsOwner((memberData?.find(item => item.uid === auth.currentUser.uid).role == "Owner"));
     }, []); 
@@ -13,11 +17,31 @@ export default function CircleSettings({id, circleData, memberData, colors}){
     const removeUser = async() =>{
 
     }
-    const deleteCircle = async() => {
-
-    }
+    const deleteCircle = async () => {
+        try {
+            const deleteFn = httpsCallable(functions, 'recursiveDeleteCollection');
+            
+            // Pass just the ID as an object
+            nav.goBack();
+            const response = await deleteFn({ id: id, uid: auth.currentUser.uid }); 
+            
+            console.log("Deleted:", response.data);
+            
+        } catch (e) {
+            console.error(e);
+            alert("Error deleting circle.");
+        }
+    }   
     const saveChanges = async() => {
 
+    }
+    const leavecircle = async() => {
+        try{    
+            
+        }catch(e){
+            console.log(e);
+            alert("Error leaving circle");
+        }
     }
     const { width, height } = Dimensions.get("window");
     const wp = (percent) => width * (percent / 100);
@@ -57,6 +81,8 @@ export default function CircleSettings({id, circleData, memberData, colors}){
             fontWeight: "700",
             fontSize: wp(5),
             color: colors.txt
+        },date: {
+            color: colors.txt
         }
         
     });
@@ -75,7 +101,15 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                             <Image style={style.cover} cachePolicy="disk" source={require("../../../assets/images/addimg.png")}/> 
                             )}
                          </TouchableOpacity>   
-                        <Text style={style.title}>{circleData.name}</Text>     
+                        <View style={{display: "flex", flexDirection: "column"}}>
+                        <Text style={style.title}>{circleData.name}</Text> 
+                        <Text style={style.date}>Created {circleData.created?.toDate?.()?.toLocaleString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: '2-digit'
+                                })}</Text> 
+                        </View>   
                     </View>
                     <View>
                         <TouchableOpacity style={style.btn}>
@@ -84,7 +118,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                         <TouchableOpacity style={style.btn}>
                             <Text style={style.btntxt}>Remove User</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={style.btn}>
+                        <TouchableOpacity style={style.btn} onPress={() => {deleteCircle()}}>
                             <Text style={style.btntxt}>Delete Circle</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={style.btn}>
@@ -108,7 +142,15 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                             <Image style={style.cover} cachePolicy="disk" source={require("../../../assets/images/logotb.png")}/> 
                             )}
                          </TouchableOpacity>   
-                        <Text style={style.title}>{circleData.name}</Text>     
+                        <View style={{display: "flex", flexDirection: "column"}}>
+                        <Text style={style.title}>{circleData.name}</Text>
+                        <Text style={style.date}>Created {circleData.created?.toDate?.()?.toLocaleString('en-US', {
+                                    month: 'short',
+                                    day: 'numeric',
+                                    hour: 'numeric',
+                                    minute: '2-digit'
+                                })}</Text> 
+                        </View>        
                     </View>
                     <View>
                         <TouchableOpacity style={style.btn}>

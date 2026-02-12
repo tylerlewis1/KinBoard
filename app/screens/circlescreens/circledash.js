@@ -1,17 +1,16 @@
-import { userContext } from "@/app/background/Users";
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from '@expo/vector-icons/Entypo';
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { arrayUnion, collection, doc, onSnapshot, writeBatch } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../../firebase";
 import useStyles from "../../styles/circle/circledash";
 import CircleSettings from "../editscreens/circleSettings";
+import Btn from "./comps/button";
 import Content from "./comps/content";
 import NavBar from "./comps/navbar";
 import SlideUpModal from "./comps/slidemodal";
@@ -19,7 +18,6 @@ export default function CircleDash(){
     const { id, name, cover } = useLocalSearchParams(); 
     const style = useStyles();
     const nav = useNavigation();
-    const user = useContext(userContext);
     const [circleData, setCircleData] = useState();
     const [settingsModal, setSettingsModal] = useState();
     const [memberData, setMemberData] = useState();
@@ -80,12 +78,11 @@ export default function CircleDash(){
             const circleRef = doc(db, "circles", String(cleanId));
             const homeMods = doc(collection(circleRef, "home"), "modules");
             const newDocRef = doc(collection(homeMods, type));
-            // need to do
             const batch = writeBatch(db);
             batch.set(newDocRef, {
                 data: [],
                 type: type,
-                circelID: circleData.id,
+                circleID: circleData.id,
                 id: newDocRef.id,
                 name: name
             })
@@ -146,59 +143,28 @@ export default function CircleDash(){
                     onClose={() => SetShowAddModal(false)}
                     >
                     <View style={style.addheader}>
-                        <Text style={{textAlign: "center", top: hp(2), fontSize: hp(3), zIndex: 10000}}>Add Module</Text>
+                        <Text style={[{textAlign: "center", top: hp(3), fontSize: hp(3), zIndex: 10000}, style.modaltxt]}>Add Module</Text>
                     </View>
                     <ScrollView style={style.addcontent}
                         contentContainerStyle={{
-                            flexDirection: "row",
-                            flexWrap: "wrap",
-                            padding: wp(5),
-                            gap: wp(9), 
-                            justifyContent: "center" ,
+                            gap: wp(4), 
+                            justifyContent: "center",
+                            paddingBottom: hp(2)
                         }}
                     >
-                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("list")}}>
-                            <View style={style.btnTop}>
-                                <Ionicons size={hp(7)} style={style.icon} name="list"/>
-                            </View>
-                            <View style={style.btnBottom}>
-                                <Text>List</Text>
-                            </View>
+                        <TouchableOpacity onPress={() => {addMod("list")}}>
+                            <Btn colors={style.colors} data={{type: "list!", name: "List"}}/>
                         </TouchableOpacity>
-
-                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("events")}} >
-                            <View style={style.btnTop}>
-                                <Ionicons size={hp(7)} style={style.icon} name="calendar"/>
-                            </View>
-                            <View style={style.btnBottom}>
-                                <Text>Events</Text>
-                            </View>
+                        <TouchableOpacity onPress={() => {addMod("chores")}}>
+                            <Btn colors={style.colors} data={{type: "chores!", name: "Chores"}}/>
                         </TouchableOpacity>
-
-                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("chores")}}>
-                            <View style={style.btnTop}>
-                               <FontAwesome6 size={hp(7)} style={style.icon} name="broom"/>
-                            </View>
-                            <View style={style.btnBottom}>
-                                <Text>Chores</Text>
-                            </View>
+                        <TouchableOpacity onPress={() => {addMod("contacts")}}>
+                            <Btn colors={style.colors} data={{type: "contacts!", name: "Contacts"}}/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("savings goal")}}>
-                            <View style={style.btnTop}>
-                               <FontAwesome6 size={hp(7)} style={style.icon} name="jar"/>
-                            </View>
-                            <View style={style.btnBottom}>
-                                <Text>Savings goal</Text>
-                            </View>
+                        <TouchableOpacity onPress={() => {addMod("savings goal")}}>
+                            <Btn colors={style.colors} data={{type: "savings goal!", name: "Savings Goal"}}/>
                         </TouchableOpacity>
-                        <TouchableOpacity style={style.addbtn} onPress={() => {addMod("contacts")}}>
-                            <View style={style.btnTop}>
-                               <FontAwesome6 size={hp(7)} style={style.icon} name="book"/>
-                            </View>
-                            <View style={style.btnBottom}>
-                                <Text>Contacts</Text>
-                            </View>
-                        </TouchableOpacity>
+                        
 
                     </ScrollView>
                 </SlideUpModal>
@@ -208,7 +174,6 @@ export default function CircleDash(){
                 >
                     <CircleSettings colors={style.colors} id={id} circleData={circleData} memberData={memberData}/>
                 </SlideUpModal>
-
         </SafeAreaView>
     )
 }

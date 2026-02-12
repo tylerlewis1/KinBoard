@@ -53,7 +53,7 @@ export default function NavBar({selection, setSelection, memberData, colors}){
             style={(selection == "add")? (style.btnactive):(style.btn)}
             onPress={() => setSelection("add")}
             >
-                <Text color={style.txt} style={{textAlign: "center", fontSize: hp(5.9)}}>+</Text>
+                <Text style={[{textAlign: "center", fontSize: hp(5.9)}, style.plus]}>+</Text>
            </TouchableOpacity>
             
         </ScrollView>
@@ -99,6 +99,9 @@ return StyleSheet.create({
         height: hp(7),
         borderRadius: 1000,
         margin: "auto"
+    },
+    plus: {
+        color: colors.txt
     },
     txt: colors.txt
 

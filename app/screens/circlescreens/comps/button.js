@@ -1,6 +1,6 @@
 import { Entypo, FontAwesome5, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import React from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, StyleSheet, Text, View } from "react-native";
 
 const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
@@ -71,7 +71,7 @@ export default function Btn({ data, colors}) {
     const icon = getIconDetails().component;
 
     return (
-        <TouchableOpacity style={style.pillContainer} activeOpacity={0.8}>
+        <View style={style.pillContainer} activeOpacity={0.8}>
             <View style={style.iconCircle}>
                 {icon}
             </View>
@@ -79,10 +79,10 @@ export default function Btn({ data, colors}) {
                 <Text style={style.buttonText}>
                     {data.name ? data.name : "No name"}
                 </Text>
-                <Text style={style.subText}>View details</Text>
+                <Text style={style.subText}>{(data.type.substr(data.type.length -1) == "!")? (`Add a ${data.name.toLowerCase()} to your page`): ("View details")}</Text>
             </View>
             <Ionicons name="chevron-forward" size={18} color="#444" style={style.arrow} />
-        </TouchableOpacity>
+        </View>
     );
 }
 

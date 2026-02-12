@@ -62,7 +62,7 @@ return StyleSheet.create({
     position: "absolute",
     bottom: 0,
     width: wp(100),
-    minHeight: hp(45),
+    maxHeight: hp(45),
     display: "flex",
     paddingHorizontal: wp(5),
     zIndex: 101,
@@ -88,6 +88,9 @@ return StyleSheet.create({
     zIndex: 99,
     borderRadius: 20
    },
+   modaltxt: {
+    color: colors.txt,
+   },   
    iconc: colors.txt,
    colors: colors
 });
