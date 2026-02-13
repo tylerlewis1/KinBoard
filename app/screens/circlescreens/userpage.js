@@ -5,46 +5,35 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { db } from "../../../firebase";
-import Announcments from "./comps/announcments";
 import Btn from "./comps/button";
-export default function Home({circleData}) {
+import UserHeader from "./comps/userheader";
+export default function UserPage({circleData, memberData, selection}) {
     const colors = useAppColors();
     const [collectionData, setCollectionData] = useState(null);
     const [mods, setMods] = useState(null);
     //get announcments
     useEffect(() => {
-    if (!circleData?.id) return;
-    const homeRef = doc(collection(db, "circles", String(circleData.id), "home"), "announcements");
-    const unsubscribe = onSnapshot(homeRef, (snapshot) => {
+    if (!circleData?.id || !memberData) return(<Text>Error</Text>);
+    const modRef = doc(collection(db, "circles", String(circleData.id), "members"), memberData.id);
+    const unsubscribe = onSnapshot(modRef, (snapshot) => {
             setCollectionData(snapshot.data());
         }, (e) => {
             console.error("Listener failed: ", e);
         });
         return unsubscribe;
       
-    }, [circleData?.id]);
+    }, [memberData]);
     useEffect(() => {
     if (!circleData?.id) return;
-        const homeRef = doc(collection(db, "circles", String(circleData.id), "home"), "announcements");
-        const unsubscribe = onSnapshot(homeRef, (snapshot) => {
-                setCollectionData(snapshot.data());
-            }, (e) => {
-                console.error("Listener failed: ", e);
-            });
-            return unsubscribe;
-        
-    }, [circleData?.id]);
-    useEffect(() => {
-    if (!circleData?.id) return;
-        const homeRef = doc(collection(db, "circles", String(circleData.id), "home"), "modules");
-        const unsubscribe = onSnapshot(homeRef, (snapshot) => {
+        const userRef = doc(collection(db, "circles", String(circleData.id), "members"), memberData.id);
+        const unsubscribe = onSnapshot(userRef, (snapshot) => {
                 setMods(snapshot.data().mods)
             }, (e) => {
                 console.error("Listener failed: ", e);
             });
             return unsubscribe;
         
-    }, [circleData?.id]);
+    }, [memberData]);
 
 
 
@@ -55,11 +44,8 @@ export default function Home({circleData}) {
     }
     return(
         <ScrollView style={style.continer}>
-            {/* <View style={style.top}>
-                <Text style={style.header}>{circleData?.name}</Text>
-            </View> */}
+            <UserHeader memberData={memberData} colors={colors} hp={hp} wp={wp}/>
             <View style={style.content}>
-                <Announcments circleData={circleData} colors={colors} announcments={collectionData.msgs}/>
                 <View style={style.btns}>
                    {
                     mods?.map((mods) => {
@@ -69,7 +55,7 @@ export default function Home({circleData}) {
                                     onPress={() =>
                                         router.navigate({
                                             pathname: "/screens/mods/list", 
-                                            params: {id: mods.id, name: mods.name, circleID: circleData.id, user: "modules", page: "home"}
+                                            params: {id: mods.id, name: mods.name, circleID: circleData.id, user: memberData.id, page: "members"}
                                         })
                                     }
                                 >
@@ -77,21 +63,21 @@ export default function Home({circleData}) {
                                 </TouchableOpacity>
                             );
                         }
-                         if(mods.type == "chores"){
+                        if(mods.type == "chores"){
+                            return(   
+                                <TouchableOpacity key={mods.id}>
+                                    <Btn colors={colors} data={mods}/>
+                                </TouchableOpacity>
+                             );
+                        }
+                        if(mods.type == "contacts"){
                             return(   
                                 <TouchableOpacity key={mods.id}>
                                     <Btn colors={colors} data={mods}/>
                                 </TouchableOpacity>
                             );
                         }
-                         if(mods.type == "contacts"){
-                            return(   
-                                <TouchableOpacity key={mods.id}>
-                                    <Btn colors={colors} data={mods}/>
-                                </TouchableOpacity>
-                            );
-                        }
-                         if(mods.type == "savings goal"){
+                        if(mods.type == "savings goal"){
                             return(   
                                 <TouchableOpacity key={mods.id}>
                                     <Btn colors={colors} data={mods}/>

@@ -18,9 +18,7 @@ export default function Account() {
     const [imageUri, setImageUri] = useState();
     const [iamgeUrl, setImageUrl] = useState();
     const pickImg = async() =>{
-            console.log("test");
             const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-            console.log(status);
             if(status != "granted"){
                 alert("You must give photo permition to add images");
                 return;

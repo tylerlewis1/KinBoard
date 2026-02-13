@@ -1,18 +1,31 @@
-import { functions } from '@/firebase';
+import { db, functions } from '@/firebase';
 import { Image } from "expo-image";
 import { useNavigation } from "expo-router";
+import { doc, updateDoc } from 'firebase/firestore';
 import { httpsCallable } from "firebase/functions";
 import { useState } from "react";
-import { Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { TextInput } from 'react-native-gesture-handler';
 import { auth } from "../../../firebase";
 export default function CircleSettings({id, circleData, memberData, colors}){
     const [isOwner, setIsOwner] = useState(false);
+    const [name, setName] = useState("");
     const nav = useNavigation();
     useState(() => {
         setIsOwner((memberData?.find(item => item.uid === auth.currentUser.uid).role == "Owner"));
     }, []); 
     const changeName = async() => {
-
+        if(name == "") return(alert("You must enter a name"));
+        try{
+            const circelRef = doc(db, "circles", circleData.id);
+            await updateDoc(circelRef, {
+                name: name
+            });
+            alert("Done, You may have to reload the app to see the changes");
+        }catch(e){
+            console.log(e);
+            alert("There was a error changing the name")
+        }
     }
     const removeUser = async() =>{
 
@@ -32,9 +45,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
             alert("Error deleting circle.");
         }
     }   
-    const saveChanges = async() => {
 
-    }
     const leavecircle = async() => {
         try{    
             
@@ -67,7 +78,8 @@ export default function CircleSettings({id, circleData, memberData, colors}){
             fontSize: hp(4),
             fontWeight: "500",
             marginVertical: "auto",
-            color: colors.txt
+            color: colors.txt,
+            width: wp(70)
         },
         btn: {
             width: wp(90),
@@ -86,10 +98,12 @@ export default function CircleSettings({id, circleData, memberData, colors}){
         }
         
     });
-
+    if(!circleData || ! memberData){
+        <ActivityIndicator/>
+    }
     if(isOwner){
         return(
-            <View style={[style.container, {minHeight: hp(45)}]}>
+            <View style={[style.container, {minHeight: hp(35)}]}>
                 <View style={style.content}>
                     <View style={style.header}>
                         <TouchableOpacity
@@ -102,7 +116,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                             )}
                          </TouchableOpacity>   
                         <View style={{display: "flex", flexDirection: "column"}}>
-                        <Text style={style.title}>{circleData.name}</Text> 
+                        <TextInput style={style.title} placeholder={circleData.name} placeholderTextColor={colors.txt} onChangeText={setName}/>
                         <Text style={style.date}>Created {circleData.created?.toDate?.()?.toLocaleString('en-US', {
                                     month: 'short',
                                     day: 'numeric',
@@ -112,7 +126,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                         </View>   
                     </View>
                     <View>
-                        <TouchableOpacity style={style.btn}>
+                        <TouchableOpacity style={style.btn} onPress={() => {changeName()}}>
                             <Text style={style.btntxt}>Change Name</Text>
                         </TouchableOpacity>
                         <TouchableOpacity style={style.btn}>
@@ -120,9 +134,6 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                         </TouchableOpacity>
                         <TouchableOpacity style={style.btn} onPress={() => {deleteCircle()}}>
                             <Text style={style.btntxt}>Delete Circle</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={style.btn}>
-                            <Text style={style.btntxt}>Save Changes</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

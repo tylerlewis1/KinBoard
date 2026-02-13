@@ -1,9 +1,10 @@
+import { userContext } from "@/app/background/Users";
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from '@expo/vector-icons/Entypo';
 import { Image } from "expo-image";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { arrayUnion, collection, doc, onSnapshot, writeBatch } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { arrayUnion, collection, doc, onSnapshot, updateDoc, writeBatch } from "firebase/firestore";
+import { useContext, useEffect, useState } from "react";
 import { Dimensions, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -24,6 +25,7 @@ export default function CircleDash(){
     const [showAddModal, SetShowAddModal] = useState(false);
     const [selection, setSelection] = useState("home");
     const { width, height } = Dimensions.get("window");
+    const user = useContext(userContext);
     const wp = (percent) => width * (percent / 100);
     const hp = (percent) => height * (percent / 100);
    
@@ -37,7 +39,6 @@ export default function CircleDash(){
             if (snapshot && typeof snapshot.data === 'function') {
                 const data = await snapshot.data();
                 if (data) {
-                    console.log(data)
                     setCircleData(data);
                 } else{
                     return;
@@ -52,7 +53,7 @@ export default function CircleDash(){
         });
 
         return () => unsubscribe();
-    }, [id]);
+    }, [circleData, id]);
 
     //getUsers
     useEffect(() => {
@@ -60,6 +61,18 @@ export default function CircleDash(){
         const cleanId = Array.isArray(id) ? id[0] : id;
         const membersRef = collection(db, "circles", String(cleanId), "members");
         const unsubscribeUsers = onSnapshot(membersRef, async(snapshot) => {
+                //update pfp if needed
+                if(((snapshot.docs.find((doc) => doc.id == auth.currentUser.uid).data().pfp) != user.userData?.pfp)){
+                    try{
+                        const memberDoc = doc(membersRef, auth.currentUser.uid);
+                        await updateDoc(memberDoc, {
+                            pfp: user.userData.pfp
+                        });
+                    }catch(e){
+                        console.log(e);
+                    }
+                }
+                
                 const membersList = snapshot.docs.map(doc => ({
                     id: doc.id,
                     ...doc.data()
@@ -73,32 +86,62 @@ export default function CircleDash(){
     }, [id]);
 
     const addMod = async(type) => {
-        try{
-            const cleanId = Array.isArray(id) ? id[0] : id;
-            const circleRef = doc(db, "circles", String(cleanId));
-            const homeMods = doc(collection(circleRef, "home"), "modules");
-            const newDocRef = doc(collection(homeMods, type));
-            const batch = writeBatch(db);
-            batch.set(newDocRef, {
-                data: [],
-                type: type,
-                circleID: circleData.id,
-                id: newDocRef.id,
-                name: name
-            })
-            batch.set(homeMods, {
-                mods: arrayUnion({
+        if(selection == "home"){
+            try{
+                const cleanId = Array.isArray(id) ? id[0] : id;
+                const circleRef = doc(db, "circles", String(cleanId));
+                const homeMods = doc(collection(circleRef, "home"), "modules");
+                const newDocRef = doc(collection(homeMods, type));
+                const batch = writeBatch(db);
+                batch.set(newDocRef, {
+                    data: [],
+                    type: type,
+                    circleID: circleData.id,
                     id: newDocRef.id,
-                    name: type,
-                    type: type
+                    name: type
                 })
-            }, {merge: true})
-            batch.commit();
-            SetShowAddModal(false);
-        }catch(e){
-            console.log(e);
-            alert("There was a error adding you module");
-            return;
+                batch.set(homeMods, {
+                    mods: arrayUnion({
+                        id: newDocRef.id,
+                        name: type,
+                        type: type
+                    })
+                }, {merge: true})
+                batch.commit();
+                SetShowAddModal(false);
+            }catch(e){
+                console.log(e);
+                alert("There was a error adding you module");
+                return;
+            }
+        } else {
+            try{
+                const cleanId = Array.isArray(id) ? id[0] : id;
+                const circleRef = doc(db, "circles", String(cleanId));
+                const userMods = doc(collection(circleRef, "members"), auth.currentUser.uid);
+                const newDocRef = doc(collection(userMods, type));
+                const batch = writeBatch(db);
+                batch.set(newDocRef, {
+                    data: [],
+                    type: type,
+                    circleID: circleData.id,
+                    id: newDocRef.id,
+                    name: type
+                })
+                batch.set(userMods, {
+                    mods: arrayUnion({
+                        id: newDocRef.id,
+                        name: type,
+                        type: type
+                    })
+                }, {merge: true})
+                batch.commit();
+                SetShowAddModal(false);
+            }catch(e){
+                console.log(e);
+                alert("There was a error adding you module");
+                return;
+            }
         }
     }
 
@@ -127,7 +170,7 @@ export default function CircleDash(){
                     </TouchableOpacity>
                 </View>    
                 <NavBar colors={style.colors} selection={selection} setSelection={setSelection} memberData={memberData}/>
-                <Content selection={selection} circleData={circleData}/>
+                <Content selection={selection} circleData={circleData} memberData={memberData}/>
                 {(selection == "home" || selection == auth.currentUser.uid)? (
                     <TouchableOpacity style={style.add} 
                         onPress={() => {SetShowAddModal(true)}}
@@ -164,8 +207,6 @@ export default function CircleDash(){
                         <TouchableOpacity onPress={() => {addMod("savings goal")}}>
                             <Btn colors={style.colors} data={{type: "savings goal!", name: "Savings Goal"}}/>
                         </TouchableOpacity>
-                        
-
                     </ScrollView>
                 </SlideUpModal>
                 <SlideUpModal

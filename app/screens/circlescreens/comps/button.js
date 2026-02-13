@@ -6,7 +6,6 @@ const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 export default function Btn({ data, colors}) {
-    
     const style = StyleSheet.create({
         pillContainer: {
             backgroundColor: colors.compbgl, // iOS Secondary System Background

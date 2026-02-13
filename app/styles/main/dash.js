@@ -21,7 +21,7 @@ return StyleSheet.create({
       color: colors.txt
    },
    greeting: {
-    fontSize: hp(4),
+    fontSize: wp(7),
     fontWeight: "bold",
     paddingTop: wp(6),
     paddingLeft: wp(3),

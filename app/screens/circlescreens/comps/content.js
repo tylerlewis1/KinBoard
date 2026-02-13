@@ -3,7 +3,8 @@ import { Dimensions, StyleSheet, Text, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import QRCode from 'react-native-qrcode-svg';
 import Home from "../home";
-export default function Content({selection, circleData}) {
+import UserPage from "../userpage";
+export default function Content({selection, circleData, memberData}) {
     const style = useStyles();
     if(selection == "home"){
         return(
@@ -14,8 +15,7 @@ export default function Content({selection, circleData}) {
                 <Home circleData={circleData}/>
             </ScrollView>
         )
-    }
-    if(selection == "add"){
+    }else if(selection == "add"){
         return(
             <View style={style.container}>
                 <Text style={style.title}>Add user to the circle</Text>
@@ -36,14 +36,18 @@ export default function Content({selection, circleData}) {
                 <Text style={style.code}>Invite Code: <Text style={{fontWeight: "bold"}}>{circleData?.id}</Text></Text>
             </View>
         )
+    } else {
+         return(
+            <ScrollView showsVerticalScrollIndicator={false}
+                style={style.container}
+                contentContainerStyle={{paddingBottom: hp(7)}} 
+            >
+                <UserPage circleData={circleData} memberData={memberData.find((member) => member.uid == selection)}/>
+            </ScrollView>
+        )
     }
     
     
-    return(
-        <ScrollView style={style.container}>
-             
-        </ScrollView>
-    );
 }
 const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
@@ -53,11 +57,12 @@ function useStyles(){
 const colors = useAppColors();
 return StyleSheet.create({
     container: {
-        width: wp(90),
-        height: hp(73),
+        width: wp(92),
+        height: hp(72),
         borderRadius: 10,
         marginTop: hp(2),
         left: wp(5),
+        marginHorizontal: wp(1)
     }, 
     title: {
         textAlign: "center",

@@ -13,20 +13,17 @@ export default function HouseHolds({userdata, setModalVisible}){
     const style = useStyle();
     const [circles, setCircles] = useState([]);
     const [loading, setLoading] = useState(true);
-    console.log(userdata);
     useEffect(() => {
         const getCircleData = async() =>{    
             setCircles([]);
             setLoading(true);
             userdata.circles.map(async (circle) => {
                 try{
-                    console.log(circle);
                     const circleRef = doc(db, "circles", String(circle));
                     const data = await getDoc(circleRef);
                     if(!data.exists()){
                         try{
                             const userDoc = doc(db, "users", auth.currentUser.uid);
-                            console.log(circle);
                             await updateDoc(userDoc, {
                                 circles: arrayRemove(circle)
                             });

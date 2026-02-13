@@ -71,6 +71,7 @@ export default function AddCircle(){
             const circleuserRef = doc(collection(circleRef, "members"), auth.currentUser.uid);
             const homeMods = doc(collection(circleRef, "home"), "modules");
             const annRef = doc(collection(circleRef, "home"), "announcements");
+            const userMods = doc(circleuserRef, "modules", "1");
             batch.set(userRef, {
                 circles: arrayUnion(id)
             }, {merge: true});
@@ -84,7 +85,8 @@ export default function AddCircle(){
                 name: user.userData.name,
                 uid: auth.currentUser.uid,
                 pfp: user.userData.pfp,
-                role: "Owner"
+                role: "Owner",
+                mods: []
             });
             batch.set(annRef, {
                 msgs:
@@ -98,11 +100,7 @@ export default function AddCircle(){
             })
             batch.set(homeMods, {
                 mods:[
-                    {
-                        name: "shoping",
-                        id: 324325,
-                        type: "list"
-                    }
+                    
                 ]
             })
             await batch.commit();
