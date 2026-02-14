@@ -4,13 +4,14 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../firebase";
 import useAppColors from "../../background/Colors";
 import ModSettings from "../../screens/editscreens/modSettings";
 import SlideUpModal from "../circlescreens/comps/slidemodal";
+import ContactModal from "./comps/contactmodal";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
@@ -155,17 +156,15 @@ export default function Contacts(){
                 </KeyboardAvoidingView>
                 </SlideUpModal>
                 
-                <SlideUpModal
+                <Modal
+                transparent={true}
                 visible={addModal}
                 onClose={() => setAddModal(false)}
+                animationType="fade"
             >
-                <KeyboardAvoidingView
-                     behavior="position"
-                keyboardVerticalOffset={hp(60)}
-                >
-
-                </KeyboardAvoidingView>
-                </SlideUpModal>
+                    <Pressable style={{backgroundColor: "rgba(0, 0, 0, .2)", position: "absolute", width: wp(100), height: hp(100)}} onPress={() => setAddModal(false)}></Pressable>
+                    <ContactModal colors={style.colors} wp={wp} hp={hp}/>
+                </Modal>
             
         </SafeAreaView>
     )
