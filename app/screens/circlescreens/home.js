@@ -86,7 +86,14 @@ export default function Home({circleData}) {
                         }
                          if(mods.type == "contacts"){
                             return(   
-                                <TouchableOpacity key={mods.id}>
+                                <TouchableOpacity key={mods.id}
+                                    onPress={() =>
+                                        router.navigate({
+                                            pathname: "/screens/mods/contacts", 
+                                            params: {id: mods.id, name: mods.name, circleID: circleData.id, user: "modules", page: "home"}
+                                        })
+                                    }
+                                >
                                     <Btn colors={colors} data={mods}/>
                                 </TouchableOpacity>
                             );

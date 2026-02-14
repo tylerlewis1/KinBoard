@@ -1,11 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { TextInput } from "react-native-gesture-handler";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../firebase";
@@ -15,15 +14,19 @@ import SlideUpModal from "../circlescreens/comps/slidemodal";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
-export default function Chores(){
-    const { id, name, user, circleID, page} = useLocalSearchParams();
-    const style = useStyles();
-    const nav = useNavigation();
+export default function Contacts(){
+    const { id, user, circleID, page} = useLocalSearchParams();
+    
     const [data, setData] = useState(null);
     const [settingsModal, setSettingsModal] = useState(false);
-    const [addItem, setAddItem] = useState();
-    const modRef = doc(db, "circles", String(circleID), page, user, "list", id);
+    const [addModal, setAddModal] = useState(false);
+
+    const style = useStyles();
+    const nav = useNavigation();
+   
+    const modRef = doc(db, "circles", String(circleID), page, user, "contacts", id);
     const pointerRef = doc(db, "circles", String(circleID), page, user);
+    
     useEffect(() => {
         const unsubscribe = onSnapshot(modRef, (snapshot) => {
             setData(snapshot.data());
@@ -98,7 +101,7 @@ export default function Chores(){
                 renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}
             >
                 <Pressable style={style.listitem} key={item.id} onPress={() => check(item)} >
-                    <BouncyCheckbox isChecked={item.item.checked} style={style.checkbox} fillColor={style.acc} text={item.item.name} textStyle={{color: style.txtc}} onPress={() => check(item)}/>
+                
                 </Pressable>
             </Swipeable>
         )
@@ -119,27 +122,26 @@ export default function Chores(){
                 </TouchableOpacity>
             </View>
             <View style={style.content}>
-                <View style={style.inputcont}>
-                    <TextInput
-                        value={addItem}
-                        onChangeText={setAddItem}
-                        style={style.input}
-                        placeholder="Add A Item"
-                        placeholderTextColor={style.txtc}
-                    />
-                    <TouchableOpacity style={style.addbtn} onPress={() => {add()}}>
-                        <Ionicons name="add" size={hp(2)} style={style.addicon}/>
-                    </TouchableOpacity>
-                </View>
+                {(data)? (
+                    <View style={[style.list, {height: hp(70)}]}>
+                        <View style={{margin: "auto"}}>
+                            <MaterialIcons name="contacts" size={hp(15)} color={style.txtc} style={{margin: "auto"}}/>
+                            <Text style={{textAlign: "center", paddingTop: hp(5), color: style.txtc, fontWeight: "bold", fontSize: wp(9)}}>No contacts yet</Text>
+                        </View>
+                    </View>
+                ):(
                 <FlatList
                     data={data.data}
                     renderItem={({item}) => <Item item={item}/>}
                     keyExtractor={item => item.id}
                     style={style.list}
-                    windowSize={1}
                     removeClippedSubviews={true}
                 />
-
+                )}
+                 <TouchableOpacity style={style.addbtn} onPress={() => {setAddModal(true)}}>
+                    <Ionicons name="add" size={hp(2)} style={style.addicon}/>
+                </TouchableOpacity>
+                
             </View>
              <SlideUpModal
                 visible={settingsModal}
@@ -150,6 +152,18 @@ export default function Chores(){
                 keyboardVerticalOffset={hp(60)}
                 >
                     <ModSettings colors={style.colors} id={id} modRef={modRef} data={data} pointerRef={pointerRef}/>
+                </KeyboardAvoidingView>
+                </SlideUpModal>
+                
+                <SlideUpModal
+                visible={addModal}
+                onClose={() => setAddModal(false)}
+            >
+                <KeyboardAvoidingView
+                     behavior="position"
+                keyboardVerticalOffset={hp(60)}
+                >
+
                 </KeyboardAvoidingView>
                 </SlideUpModal>
             
@@ -184,39 +198,27 @@ function useStyles(){
             color: colors.txt,
             fontWeight: "black",
             fontSize: wp(10),
+            maxWidth: wp(80),
             padding: hp(2)
         },
-        input: {
-            padding: hp(1),
-            color: colors.txt,
-            width: wp(75)
-        },
-        inputcont: {
-            backgroundColor: colors.compbgl,
-            width: wp(90),
-            marginHorizontal: "auto",
-            borderRadius: 10,
-            padding: hp(1),
-            display: "flex",
-            flexDirection: "row"
-        },
-        addicon: {
+         addicon: {
             margin: "auto",
 
         },
         addbtn: {
             backgroundColor: colors.accent,
             height: hp(5),
-            width: hp(5),
-            right: wp(1),
-            top: hp(.5),
-            position: "absolute",
+            width: wp(90),
             borderRadius: 10,
+            marginHorizontal: "auto",
+            top: -hp(1),
         },
         list: {
             width: wp(90),
             marginHorizontal: "auto",
-            top: hp(4)
+            backgroundColor: colors.compbg,
+            padding: wp(2),
+            borderRadius: 10
         },
         itemtxt: {
             color: colors.txt,
