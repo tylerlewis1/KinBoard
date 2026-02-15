@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from "react-native-gesture-handler";
-export default function ContactModal({colors, wp, hp}) {
+
+export default function ContactModal({colors, wp, hp, addContact}) {
     const style = useStyles(colors, wp, hp);
     const [contact, setContact] = useState({
         name: "",
@@ -27,7 +28,7 @@ export default function ContactModal({colors, wp, hp}) {
                     placeholder="Description (optional)"
                     onChangeText={(value) => setContact({name: contact.name, phone: contact.phone, description: value})}
                 /> 
-                <TouchableOpacity style={[style.btn, (!(contact.name != "") || !(contact.phone != "")) ? style.inactive: style.active]} disabled={ (!(contact.name != "") || !(contact.phone != ""))}>
+                <TouchableOpacity style={[style.btn, (!(contact.name != "") || !(contact.phone != "")) ? style.inactive: style.active]} disabled={ (!(contact.name != "") || !(contact.phone != ""))} onPress={() => {addContact(contact)}}>
                     <Text style={style.btntxt}>Add</Text>
                 </TouchableOpacity>
                 

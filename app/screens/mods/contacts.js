@@ -4,7 +4,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Linking, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../firebase";
@@ -37,18 +37,17 @@ export default function Contacts(){
         return unsubscribe;
         
     }, []);
-    const add = async() => {
+    const addContact = async(contact) => {
         try{
-            setAddItem("");
             await updateDoc(modRef, {
                 data: arrayUnion({
-                    name: addItem,
-                    checked: false,
+                    name: contact.name,
+                    phone: contact.phone,
                     id: Math.random(),
-                    url: ""
+                    description: contact.description
                 })
             })
-            
+            setAddModal(false)
         }catch(e){
             console.log(e);
             alert("error");
@@ -101,8 +100,10 @@ export default function Contacts(){
             <Swipeable 
                 renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}
             >
-                <Pressable style={style.listitem} key={item.id} onPress={() => check(item)} >
-                
+                <Pressable style={style.listitem} key={item.id} onPress={() => {Linking.openURL(`tel:${item.item.phone}`)}} >
+                    <Text style={style.name}>{item.item.name}</Text>
+                    <Text style={style.phone}>{item.item.phone}</Text>
+                    <Text style={style.description}>{item.item.description}</Text>
                 </Pressable>
             </Swipeable>
         )
@@ -123,7 +124,7 @@ export default function Contacts(){
                 </TouchableOpacity>
             </View>
             <View style={style.content}>
-                {(data)? (
+                {(data.data.length == 0)? (
                     <View style={[style.list, {height: hp(70)}]}>
                         <View style={{margin: "auto"}}>
                             <MaterialIcons name="contacts" size={hp(15)} color={style.txtc} style={{margin: "auto"}}/>
@@ -163,7 +164,7 @@ export default function Contacts(){
                 animationType="fade"
             >
                     <Pressable style={{backgroundColor: "rgba(0, 0, 0, .2)", position: "absolute", width: wp(100), height: hp(100)}} onPress={() => setAddModal(false)}></Pressable>
-                    <ContactModal colors={style.colors} wp={wp} hp={hp}/>
+                    <ContactModal colors={style.colors} wp={wp} hp={hp} addContact={addContact}/>
                 </Modal>
             
         </SafeAreaView>
@@ -226,16 +227,24 @@ function useStyles(){
             backgroundColor: colors.compbgl,
             borderRadius: 10,
             padding: hp(2),
-            marginBottom: hp(2)
+            marginBottom: hp(2),
+            height: hp(13)
         },
         delbtn: {
             backgroundColor: "red",
             width: wp(15),
-            height: hp(6.5),
+            height: hp(13),
             borderRadius: 10,
         },
-        checkbox: {
-            color: colors.accent
+        phone:{
+             color: colors.txt
+        },
+        name: {
+            fontSize: wp(10),
+            color: colors.txt
+        },
+        description: {
+             color: colors.txt
         },
         loading: {
             flex: 1,
