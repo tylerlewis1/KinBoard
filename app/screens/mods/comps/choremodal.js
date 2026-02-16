@@ -15,7 +15,7 @@ export default function ChoreModal({colors, wp, hp, addChore}) {
     });
      const [items, setItems] = useState([
         { label: 'Do not repeat', value: null },
-        { label: 'Dailey', value: 'Dailey' },
+        { label: 'Daily', value: 'Daily' },
         { label: 'Every Other Day', value: 'Every Other Day' },
         { label: 'Weekly', value: 'Weekly' },
         { label: 'Biweekly', value: 'Biweekly' },

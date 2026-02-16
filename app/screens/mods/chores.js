@@ -4,7 +4,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Dimensions, FlatList, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../firebase";
@@ -67,7 +67,25 @@ export default function Chores(){
             alert("error");
         }
     }
+    const showAlert = (item) => {
+         Alert.alert("Yay!", "Do you want to check off this task?", [
+            {
+                text: "Yes",
+                onPress: () => {check(item)}
+            },{
+                text: "No",
+                style: "cancel",
+                onPress: () => {return}
+            }
+        ]);
+    }
+
     const check = async(item) => {
+        
+        if(item.item.repeat == null){
+            remove(item)
+            return;
+        }
         try{
             data.data.find((datai) => datai.id == item.item.id).lastdone = Date();
             data.data.find((datai) => datai.id == item.item.id).lastdoneby = userdata.userData.name;
@@ -92,31 +110,56 @@ export default function Chores(){
                     remove(item);
                 }}
             >
-                <Ionicons style={{margin: "auto"}}size={hp(2.5)} color="white" name="trash"/>
+                <Ionicons style={{margin: "auto"}}size={hp(2.5)} color="black" name="trash"/>
             </TouchableOpacity>
         );
     };
 
     const Item = (item) => {
         let formattedDateTime = null;
+        let done = true;
         //format time
         if(item.item.lastdone != null){
             const dateObject = new Date(item.item.lastdone);
+            const now = new Date();
             const options = {
                 weekday: 'short', 
                 hour: 'numeric', 
                 minute: 'numeric',
                 hour12: true 
             };
+            if(item.item.repeat == "Daily" && (dateObject.getDate() != now.getDate())){
+                done = false; 
+            }if(item.item.repeat == "Every Other Day" && (Number(now.getDate()) - Number(dateObject.getDate()) ) >= 2){
+                done = false; 
+            }if(item.item.repeat == "Weekly" && (Number(now.getDate()) - Number(dateObject.getDate()) ) >= 7){
+                done = false; 
+            }if(item.item.repeat == "Biweekly" && (Number(now.getDate()) - Number(dateObject.getDate()) ) >= 14){
+                done = false; 
+            }if(item.item.repeat == "Monthly" && (Number(now.getDate()) - Number(dateObject.getDate()) ) >= 30){
+                done = false; 
+            }if(item.item.repeat == "6 Months" && (Number(now.getDate()) - Number(dateObject.getDate()) ) >= 181){
+                done = false; 
+            }if(item.item.repeat == "Yearly" && (Number(now.getDate()) - Number(dateObject.getDate()) ) >= 365){
+                done = false; 
+            }
+            
             formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(dateObject);
         }
 
         return(
             <Swipeable 
+                
                 renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}
             >
-                <Pressable style={style.listitem} key={item.id} onPress={() => {check(item)}} >
-                <MaterialIcons size={hp(5)} style={style.icon} color={style.txtc} name="check-circle-outline"/>
+                <Pressable  style={[style.listitem, done ? {backgroundColor: "#4af166"}: {backgroundColor: "#ce3232"}]} key={item.id} onPress={() => {showAlert(item)}} >
+                {done? (
+                    <MaterialIcons size={hp(5)} style={style.icon} color="black" name="check-circle-outline"/>
+                
+                ):(
+                    <Entypo size={hp(5)} style={style.icon} color="black" name="circle-with-cross"/>
+                
+                )}
                 <View>
                     <Text style={style.name}>{item.item.name}</Text>
                     {(item.item.description != null) ? (
@@ -126,10 +169,10 @@ export default function Chores(){
                     <Text style={style.assignment}>Assigned to: {item.item.who}</Text>
                    ):(<></>)}
                     {(item.item.lastdone != null) ? (
-                        <Text style={{color: "#bfbbbb", fontSize: wp(3)}}>Last done: {formattedDateTime} by {item.item.lastdoneby}</Text>
+                        <Text style={{color: "black", fontSize: wp(3)}}>Last done: {formattedDateTime} by {item.item.lastdoneby}</Text>
                     ): (<></>)}
                    {(item.item.repeat != null) ? (
-                        <Text style={{color: "#bfbbbb", fontSize: wp(3)}}>Repeat:  {item.item.repeat}</Text>
+                        <Text style={{color: "black", fontSize: wp(3)}}>Repeat:  {item.item.repeat}</Text>
                     ): (<></>)}
                 </View>
             
@@ -256,29 +299,29 @@ function useStyles(){
             borderRadius: 10
         },
         assignment: {
-            color: colors.offtxt,
+            color: "black",
         },
         listitem: {
-            backgroundColor: colors.compbgl,
             borderRadius: 10,
             padding: hp(2),
             marginBottom: hp(2),
-            height: hp(15),
             display: "flex",
             flexDirection: "row"
         },
         delbtn: {
             backgroundColor: "red",
             width: wp(15),
-            height: hp(13),
+            height: "auto",
             borderRadius: 10,
+            marginBottom: hp(2),
+
         },
         phone:{
              color: colors.txt
         },
         name: {
-            fontSize: wp(10),
-            color: colors.txt
+            fontSize: wp(8),
+            color: "black"
         },
         description: {
              color: colors.txt

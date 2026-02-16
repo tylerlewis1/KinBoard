@@ -65,7 +65,14 @@ export default function UserPage({circleData, memberData, selection}) {
                         }
                         if(mods.type == "chores"){
                             return(   
-                                <TouchableOpacity key={mods.id}>
+                                <TouchableOpacity key={mods.id}
+                                    onPress={() =>
+                                        router.navigate({
+                                            pathname: "/screens/mods/chores", 
+                                            params: {id: mods.id, name: mods.name, circleID: circleData.id, user: memberData.id, page: "members"}
+                                        })
+                                    }
+                                >
                                     <Btn colors={colors} data={mods}/>
                                 </TouchableOpacity>
                              );

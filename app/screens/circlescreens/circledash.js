@@ -204,7 +204,7 @@ export default function CircleDash(){
                         <TouchableOpacity onPress={() => {addMod("contacts")}}>
                             <Btn colors={style.colors} data={{type: "contacts!", name: "Contacts"}}/>
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {addMod("savings goal")}}>
+                        <TouchableOpacity onPress={() => {alert("This has not been added yet")}}>
                             <Btn colors={style.colors} data={{type: "savings goal!", name: "Savings Goal"}}/>
                         </TouchableOpacity>
                     </ScrollView>

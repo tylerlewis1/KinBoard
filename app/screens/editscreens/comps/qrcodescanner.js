@@ -8,6 +8,7 @@ export default function QrCodeScanner({setCode}) {
     const isPermissionGranted = Boolean(permission?.granted);
     useEffect(()=>{
         try{    
+            
             if(!isPermissionGranted){
                 requestPermission();
             }
@@ -20,7 +21,6 @@ export default function QrCodeScanner({setCode}) {
         <View style={styleSheet.container}>
 
             {Platform.OS === "android" ? <StatusBar hidden /> : null}
-            {(isPermissionGranted)? (
                 <CameraView
                     style={styleSheet.camStyle}
                     facing="back"
@@ -36,7 +36,6 @@ export default function QrCodeScanner({setCode}) {
                     }
             />
 
-            ): (<></>)}
             
         </View>
     );
