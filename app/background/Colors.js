@@ -8,6 +8,7 @@ export const Colors = {
         compbg: "#252424",
         compbgl: "#302f2f",
         compbgd: "#131212",
+        offtxt: "#bfbbbb"
     },
     light: {
         accent: "#2EC4B6",
@@ -15,7 +16,8 @@ export const Colors = {
         background: "#f0eeee",
         compbg: "#d9d6d6",
         compbgl: "#e7e4e4",
-        compbgd: "rgb(202, 199, 199)"
+        compbgd: "rgb(202, 199, 199)",
+        offtxt: "#bfbbbb"
     }
 };
 

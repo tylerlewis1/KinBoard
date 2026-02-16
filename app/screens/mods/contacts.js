@@ -63,20 +63,7 @@ export default function Contacts(){
             alert("error");
         }
     }
-    const check = async(item) => {
-        try{
-            data.data.find((datai) => datai.id == item.item.id).checked = !(data.data.find((datai) => datai.id == item.item.id).checked );
-            await updateDoc(modRef, {
-                data: data.data
-            });
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
-    }
-    const rename = async() =>{
-
-    }
+   
 
     if(!data){
         return(<ActivityIndicator style={style.loading}/>)

@@ -1,15 +1,19 @@
 {
   "expo": {
     "name": "KinBoard",
-    "slug": "KinBoard",
-    "version": "1.0.0",
+    "slug": "kinboard",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/logoz.png",
     "scheme": "kinboard",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tylerlewis.kinboard",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -43,6 +47,13 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "63fd542f-1c9a-4f55-9aa4-d66bb37b593c"
+      }
+    },
+    "owner": "tylerlewis"
   }
 }

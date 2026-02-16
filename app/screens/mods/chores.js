@@ -1,29 +1,34 @@
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
-import { TextInput } from "react-native-gesture-handler";
+import { useContext, useEffect, useState } from "react";
+import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../firebase";
 import useAppColors from "../../background/Colors";
+import { userContext } from "../../background/Users";
 import ModSettings from "../../screens/editscreens/modSettings";
 import SlideUpModal from "../circlescreens/comps/slidemodal";
+import ChoreModal from "./comps/choremodal";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 export default function Chores(){
-    const { id, name, user, circleID, page} = useLocalSearchParams();
-    const style = useStyles();
-    const nav = useNavigation();
+    const { id, user, circleID, page} = useLocalSearchParams();
+    const userdata = useContext(userContext);
     const [data, setData] = useState(null);
     const [settingsModal, setSettingsModal] = useState(false);
-    const [addItem, setAddItem] = useState();
-    const modRef = doc(db, "circles", String(circleID), page, user, "list", id);
+    const [addModal, setAddModal] = useState(false);
+
+    const style = useStyles();
+    const nav = useNavigation();
+   
+    const modRef = doc(db, "circles", String(circleID), page, user, "chores", id);
     const pointerRef = doc(db, "circles", String(circleID), page, user);
+    
     useEffect(() => {
         const unsubscribe = onSnapshot(modRef, (snapshot) => {
             setData(snapshot.data());
@@ -33,18 +38,20 @@ export default function Chores(){
         return unsubscribe;
         
     }, []);
-    const add = async() => {
+    const addChore = async(chore, repeat) => {
         try{
-            setAddItem("");
             await updateDoc(modRef, {
                 data: arrayUnion({
-                    name: addItem,
-                    checked: false,
+                    name: chore.name,
+                    who: chore.who,
                     id: Math.random(),
-                    url: ""
+                    description: chore.description,
+                    lastdoneby: null,
+                    lastdone: null,
+                    repeat: repeat
                 })
             })
-            
+            setAddModal(false)
         }catch(e){
             console.log(e);
             alert("error");
@@ -62,7 +69,8 @@ export default function Chores(){
     }
     const check = async(item) => {
         try{
-            data.data.find((datai) => datai.id == item.item.id).checked = !(data.data.find((datai) => datai.id == item.item.id).checked );
+            data.data.find((datai) => datai.id == item.item.id).lastdone = Date();
+            data.data.find((datai) => datai.id == item.item.id).lastdoneby = userdata.userData.name;
             await updateDoc(modRef, {
                 data: data.data
             });
@@ -70,9 +78,6 @@ export default function Chores(){
             console.log(e);
             alert("error");
         }
-    }
-    const rename = async() =>{
-
     }
 
     if(!data){
@@ -93,12 +98,41 @@ export default function Chores(){
     };
 
     const Item = (item) => {
+        let formattedDateTime = null;
+        //format time
+        if(item.item.lastdone != null){
+            const dateObject = new Date(item.item.lastdone);
+            const options = {
+                weekday: 'short', 
+                hour: 'numeric', 
+                minute: 'numeric',
+                hour12: true 
+            };
+            formattedDateTime = new Intl.DateTimeFormat('en-US', options).format(dateObject);
+        }
+
         return(
             <Swipeable 
                 renderRightActions={(progress, dragX) => renderRightActions(progress, dragX, item)}
             >
-                <Pressable style={style.listitem} key={item.id} onPress={() => check(item)} >
-                    <BouncyCheckbox isChecked={item.item.checked} style={style.checkbox} fillColor={style.acc} text={item.item.name} textStyle={{color: style.txtc}} onPress={() => check(item)}/>
+                <Pressable style={style.listitem} key={item.id} onPress={() => {check(item)}} >
+                <MaterialIcons size={hp(5)} style={style.icon} color={style.txtc} name="check-circle-outline"/>
+                <View>
+                    <Text style={style.name}>{item.item.name}</Text>
+                    {(item.item.description != null) ? (
+                        <Text style={style.assignment}>{item.item.description}</Text>
+                   ):(<></>)}
+                   {(item.item.who != null) ? (
+                    <Text style={style.assignment}>Assigned to: {item.item.who}</Text>
+                   ):(<></>)}
+                    {(item.item.lastdone != null) ? (
+                        <Text style={{color: "#bfbbbb", fontSize: wp(3)}}>Last done: {formattedDateTime} by {item.item.lastdoneby}</Text>
+                    ): (<></>)}
+                   {(item.item.repeat != null) ? (
+                        <Text style={{color: "#bfbbbb", fontSize: wp(3)}}>Repeat:  {item.item.repeat}</Text>
+                    ): (<></>)}
+                </View>
+            
                 </Pressable>
             </Swipeable>
         )
@@ -119,27 +153,26 @@ export default function Chores(){
                 </TouchableOpacity>
             </View>
             <View style={style.content}>
-                <View style={style.inputcont}>
-                    <TextInput
-                        value={addItem}
-                        onChangeText={setAddItem}
-                        style={style.input}
-                        placeholder="Add A Item"
-                        placeholderTextColor={style.txtc}
-                    />
-                    <TouchableOpacity style={style.addbtn} onPress={() => {add()}}>
-                        <Ionicons name="add" size={hp(2)} style={style.addicon}/>
-                    </TouchableOpacity>
-                </View>
+                {(data.data.length == 0)? (
+                    <View style={[style.list, {height: hp(70)}]}>
+                        <View style={{margin: "auto"}}>
+                            <MaterialIcons name="check" size={hp(15)} color={style.txtc} style={{margin: "auto"}}/>
+                            <Text style={{textAlign: "center", paddingTop: hp(5), color: style.txtc, fontWeight: "bold", fontSize: wp(9)}}>Nothing to do!</Text>
+                        </View>
+                    </View>
+                ):(
                 <FlatList
                     data={data.data}
                     renderItem={({item}) => <Item item={item}/>}
                     keyExtractor={item => item.id}
                     style={style.list}
-                    windowSize={1}
                     removeClippedSubviews={true}
                 />
-
+                )}
+                 <TouchableOpacity style={style.addbtn} onPress={() => {setAddModal(true)}}>
+                    <Ionicons name="add" size={hp(2)} style={style.addicon}/>
+                </TouchableOpacity>
+                
             </View>
              <SlideUpModal
                 visible={settingsModal}
@@ -152,6 +185,21 @@ export default function Chores(){
                     <ModSettings colors={style.colors} id={id} modRef={modRef} data={data} pointerRef={pointerRef}/>
                 </KeyboardAvoidingView>
                 </SlideUpModal>
+                    <Modal
+                        transparent={true}
+                        visible={addModal}
+                        onClose={() => setAddModal(false)}
+                        animationType="fade"
+                    >
+                    <Pressable style={{backgroundColor: "rgba(0, 0, 0, .2)", position: "absolute", width: wp(100), height: hp(100)}} onPress={() => setAddModal(false)}></Pressable>
+                        <KeyboardAvoidingView
+                            behavior="position"
+                            style={{top: hp(30)}}
+                        >
+                           
+                            <ChoreModal colors={style.colors} wp={wp} hp={hp} addChore={addChore}/>
+                        </KeyboardAvoidingView>
+                    </Modal>
             
         </SafeAreaView>
     )
@@ -163,6 +211,7 @@ function useStyles(){
         txtc: colors.txt,
         acc: colors.accent,
         colors: colors,
+        nmtxt: "#d5d3d3",
         container: {
             backgroundColor: colors.background,
             flex: 1
@@ -184,57 +233,55 @@ function useStyles(){
             color: colors.txt,
             fontWeight: "black",
             fontSize: wp(10),
+            maxWidth: wp(80),
             padding: hp(2)
         },
-        input: {
-            padding: hp(1),
-            color: colors.txt,
-            width: wp(75)
-        },
-        inputcont: {
-            backgroundColor: colors.compbgl,
-            width: wp(90),
-            marginHorizontal: "auto",
-            borderRadius: 10,
-            padding: hp(1),
-            display: "flex",
-            flexDirection: "row"
-        },
-        addicon: {
+         addicon: {
             margin: "auto",
 
         },
         addbtn: {
             backgroundColor: colors.accent,
             height: hp(5),
-            width: hp(5),
-            right: wp(1),
-            top: hp(.5),
-            position: "absolute",
+            width: wp(90),
             borderRadius: 10,
+            marginHorizontal: "auto",
+            top: -hp(1),
         },
         list: {
             width: wp(90),
             marginHorizontal: "auto",
-            top: hp(4)
+            backgroundColor: colors.compbg,
+            padding: wp(2),
+            borderRadius: 10
         },
-        itemtxt: {
-            color: colors.txt,
+        assignment: {
+            color: colors.offtxt,
         },
         listitem: {
             backgroundColor: colors.compbgl,
             borderRadius: 10,
             padding: hp(2),
-            marginBottom: hp(2)
+            marginBottom: hp(2),
+            height: hp(15),
+            display: "flex",
+            flexDirection: "row"
         },
         delbtn: {
             backgroundColor: "red",
             width: wp(15),
-            height: hp(6.5),
+            height: hp(13),
             borderRadius: 10,
         },
-        checkbox: {
-            color: colors.accent
+        phone:{
+             color: colors.txt
+        },
+        name: {
+            fontSize: wp(10),
+            color: colors.txt
+        },
+        description: {
+             color: colors.txt
         },
         loading: {
             flex: 1,
@@ -244,6 +291,10 @@ function useStyles(){
             position: "absolute",
             right: 0,
             padding: hp(3)
+        },
+        icon: {
+            marginVertical: "auto",
+            paddingRight: wp(5)
         }
         
     })

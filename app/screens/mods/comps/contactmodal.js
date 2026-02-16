@@ -15,16 +15,19 @@ export default function ContactModal({colors, wp, hp, addContact}) {
             <View style={style.form}>
                 <TextInput
                     style={style.input}
+                    placeholderTextColor={colors.txt}
                     placeholder="Name"
                     onChangeText={(value) => setContact({name: value, phone: contact.phone, description: contact.description})}
                 />
                 <TextInput
                     style={style.input}
+                    placeholderTextColor={colors.txt}
                     placeholder="Phone Number"
                     onChangeText={(value) => setContact({name: contact.name, phone: value, description: contact.description})}
                 /> 
                 <TextInput
                     style={style.input}
+                    placeholderTextColor={colors.txt}
                     placeholder="Description (optional)"
                     onChangeText={(value) => setContact({name: contact.name, phone: contact.phone, description: value})}
                 /> 
@@ -40,12 +43,12 @@ function useStyles(colors, wp, hp){
 
     return StyleSheet.create({
         content: {
-            backgroundColor: colors.background,
+            backgroundColor: colors.compbg,
             width: wp(80),
             margin: "auto",
             height: hp(35),
             padding: wp(5),
-            borderRadius: 10
+            borderRadius: 10,
         },
         txt: {
             color: colors.txt,
@@ -61,7 +64,8 @@ function useStyles(colors, wp, hp){
             padding: hp(1),
             borderRadius: 10,
             width: wp(70),
-            marginBottom: hp(2)
+            marginBottom: hp(2),
+            color: colors.txt
         },
         btn: {
             margin: "auto",
