@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { db } from "../../../firebase";
-import Announcments from "./comps/announcments";
+import Announcments from "./comps/announcments/announcments";
 import Btn from "./comps/button";
 export default function Home({circleData}) {
     const colors = useAppColors();
