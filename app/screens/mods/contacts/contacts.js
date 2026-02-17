@@ -10,7 +10,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../../firebase";
 import useAppColors from "../../../background/Colors";
 import SlideUpModal from "../../circlescreens/comps/slidemodal";
-import ModSettings from "../../editscreens/modSettings";
+import ModSettings from "../modsettings/modSettings";
 import { useModules } from "../useModules";
 import ContactModal from "./contactmodal";
  const { width, height } = Dimensions.get("window");

@@ -11,7 +11,7 @@ import { db } from "../../../../firebase";
 import useAppColors from "../../../background/Colors";
 import { userContext } from "../../../background/Users";
 import SlideUpModal from "../../circlescreens/comps/slidemodal";
-import ModSettings from "../../editscreens/modSettings";
+import ModSettings from "../modsettings/modSettings";
 import { useModules } from "../useModules";
 import ChoreModal from "./choremodal";
  const { width, height } = Dimensions.get("window");

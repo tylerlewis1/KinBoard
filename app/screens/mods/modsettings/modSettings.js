@@ -2,8 +2,10 @@ import { db } from "@/firebase";
 import { useNavigation } from "expo-router";
 import { arrayRemove, getDoc, writeBatch } from "firebase/firestore";
 import { useState } from "react";
-import { ActivityIndicator, Dimensions, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Dimensions, Text, TextInput, TouchableOpacity, View } from "react-native";
+import useStyle from "./modSettigs.styles";
 export default function CompSettings({id, colors, modRef, data, pointerRef}){
+    const style = useStyle(colors);
     const nav = useNavigation();
     const [name, setName] = useState();
     const { width, height } = Dimensions.get("window");
@@ -50,47 +52,7 @@ export default function CompSettings({id, colors, modRef, data, pointerRef}){
             alert("There was a error removing your circle")
         }
     }
-    const style = StyleSheet.create({
-        container: {
-        backgroundColor: colors.background,
-        borderRadius: 20
-        }, content:{
-            padding: wp(5),
-        }, cover: {
-            width: hp(7),
-            height: hp(7),
-            borderRadius: 1000
-            
-        }, header: {
-            display: "flex",
-            flexDirection: "row",
-            gap: wp(2)
-
-        },
-        title: {
-            fontSize: hp(4),
-            fontWeight: "500",
-            marginVertical: "auto",
-            color: colors.txt,
-            width: wp(80)
-        },
-        btn: {
-            width: wp(90),
-            borderWidth: 1,
-            marginTop: hp(2),
-            padding: hp(1),
-            backgroundColor: colors.compbgl,
-            borderColor: colors.compbg
-        }, btntxt: {
-            textAlign: "center",
-            fontWeight: "700",
-            fontSize: hp(3),
-            color: colors.txt
-        },date: {
-            color: colors.txt
-        }
-        
-    });
+   
     if(!data){
         <ActivityIndicator/>
     }
