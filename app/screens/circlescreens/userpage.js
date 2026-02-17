@@ -54,7 +54,7 @@ export default function UserPage({circleData, memberData, selection}) {
                                 <TouchableOpacity key={mods.id}
                                     onPress={() =>
                                         router.navigate({
-                                            pathname: "/screens/mods/list", 
+                                            pathname: "/screens/mods/lists/list", 
                                             params: {id: mods.id, name: mods.name, circleID: circleData.id, user: memberData.id, page: "members"}
                                         })
                                     }
@@ -68,7 +68,7 @@ export default function UserPage({circleData, memberData, selection}) {
                                 <TouchableOpacity key={mods.id}
                                     onPress={() =>
                                         router.navigate({
-                                            pathname: "/screens/mods/chores", 
+                                            pathname: "/screens/mods/chores/chores", 
                                             params: {id: mods.id, name: mods.name, circleID: circleData.id, user: memberData.id, page: "members"}
                                         })
                                     }
@@ -82,7 +82,7 @@ export default function UserPage({circleData, memberData, selection}) {
                                 <TouchableOpacity key={mods.id}
                                     onPress={() =>
                                         router.navigate({
-                                            pathname: "/screens/mods/contacts", 
+                                            pathname: "/screens/mods/contacts/contacts", 
                                             params: {id: mods.id, name: mods.name, circleID: circleData.id, user: memberData.id, page: "members"}
                                         })
                                     }

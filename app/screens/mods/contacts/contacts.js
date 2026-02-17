@@ -2,23 +2,23 @@ import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { doc } from "firebase/firestore";
+import { useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Linking, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../../../firebase";
-import useAppColors from "../../background/Colors";
-import ModSettings from "../../screens/editscreens/modSettings";
-import SlideUpModal from "../circlescreens/comps/slidemodal";
-import ContactModal from "./comps/contactmodal";
+import { db } from "../../../../firebase";
+import useAppColors from "../../../background/Colors";
+import SlideUpModal from "../../circlescreens/comps/slidemodal";
+import ModSettings from "../../editscreens/modSettings";
+import { useModules } from "../useModules";
+import ContactModal from "./contactmodal";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 export default function Contacts(){
     const { id, user, circleID, page} = useLocalSearchParams();
-    
-    const [data, setData] = useState(null);
+    const logic = useModules(id, user, circleID, page, "contacts");
     const [settingsModal, setSettingsModal] = useState(false);
     const [addModal, setAddModal] = useState(false);
 
@@ -28,44 +28,20 @@ export default function Contacts(){
     const modRef = doc(db, "circles", String(circleID), page, user, "contacts", id);
     const pointerRef = doc(db, "circles", String(circleID), page, user);
     
-    useEffect(() => {
-        const unsubscribe = onSnapshot(modRef, (snapshot) => {
-            setData(snapshot.data());
-        }, (e) => {
-            console.error("Listener failed: ", e);
-        });
-        return unsubscribe;
-        
-    }, []);
     const addContact = async(contact) => {
-        try{
-            await updateDoc(modRef, {
-                data: arrayUnion({
-                    name: contact.name,
-                    phone: contact.phone,
-                    id: Math.random(),
-                    description: contact.description
-                })
-            })
-            setAddModal(false)
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
+      logic.add({
+            name: contact.name,
+            phone: contact.phone,
+            id: Math.random(),
+            description: contact.description
+        });
+        setAddModal(false)
     }
     const remove = async(item) => {
-         try{
-             await updateDoc(modRef, {
-                data: arrayRemove(item.item)
-            })
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
+         logic.remove(item.item)
     }
-   
 
-    if(!data){
+    if(!logic.data){
         return(<ActivityIndicator style={style.loading}/>)
     }
     
@@ -102,7 +78,7 @@ export default function Contacts(){
                 <TouchableOpacity onPress={() => {nav.goBack()}}>
                     <Ionicons color={style.txtc} size={wp(6)} name="arrow-back" style={style.back} />
                 </TouchableOpacity>
-                <Text style={style.title}>{data.name}</Text>
+                <Text style={style.title}>{logic.data.name}</Text>
                 <TouchableOpacity 
                         style={style.settings}
                         onPress={() => setSettingsModal(true)}
@@ -111,7 +87,7 @@ export default function Contacts(){
                 </TouchableOpacity>
             </View>
             <View style={style.content}>
-                {(data.data.length == 0)? (
+                {(logic.data.data.length == 0)? (
                     <View style={[style.list, {height: hp(70)}]}>
                         <View style={{margin: "auto"}}>
                             <MaterialIcons name="contacts" size={hp(15)} color={style.txtc} style={{margin: "auto"}}/>
@@ -120,7 +96,7 @@ export default function Contacts(){
                     </View>
                 ):(
                 <FlatList
-                    data={data.data}
+                    data={logic.data.data}
                     renderItem={({item}) => <Item item={item}/>}
                     keyExtractor={item => item.id}
                     style={style.list}
@@ -140,7 +116,7 @@ export default function Contacts(){
                      behavior="position"
                 keyboardVerticalOffset={hp(60)}
                 >
-                    <ModSettings colors={style.colors} id={id} modRef={modRef} data={data} pointerRef={pointerRef}/>
+                    <ModSettings colors={style.colors} id={id} modRef={modRef} data={logic.data} pointerRef={pointerRef}/>
                 </KeyboardAvoidingView>
                 </SlideUpModal>
                 

@@ -1,81 +1,52 @@
 import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { useEffect, useState } from "react";
+import { doc } from "firebase/firestore";
+import { useState } from "react";
 import { ActivityIndicator, Dimensions, FlatList, KeyboardAvoidingView, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import { TextInput } from "react-native-gesture-handler";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../../../firebase";
-import useAppColors from "../../background/Colors";
-import ModSettings from "../../screens/editscreens/modSettings";
-import SlideUpModal from "../circlescreens/comps/slidemodal";
+import { db } from "../../../../firebase";
+import useAppColors from "../../../background/Colors";
+import SlideUpModal from "../../circlescreens/comps/slidemodal";
+import ModSettings from "../../editscreens/modSettings";
+import { useModules } from "../useModules";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 export default function List(){
     const { id, name, user, circleID, page} = useLocalSearchParams();
+    const logic = useModules(id, user, circleID, page, "list");
     const style = useStyles();
     const nav = useNavigation();
-    const [data, setData] = useState(null);
     const [settingsModal, setSettingsModal] = useState(false);
     const [addItem, setAddItem] = useState();
     const modRef = doc(db, "circles", String(circleID), page, user, "list", id);
     const pointerRef = doc(db, "circles", String(circleID), page, user);
-    useEffect(() => {
-        const unsubscribe = onSnapshot(modRef, (snapshot) => {
-            setData(snapshot.data());
-        }, (e) => {
-            console.error("Listener failed: ", e);
-        });
-        return unsubscribe;
-        
-    }, []);
+
     const add = async() => {
-        try{
-            setAddItem("");
-            await updateDoc(modRef, {
-                data: arrayUnion({
-                    name: addItem,
-                    checked: false,
-                    id: Math.random(),
-                    url: ""
-                })
-            })
-            
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
+        setAddItem("");
+        logic.add({
+            name: addItem,
+            checked: false,
+            id: Math.random(),
+            url: ""
+        });
     }
+
     const remove = async(item) => {
-         try{
-             await updateDoc(modRef, {
-                data: arrayRemove(item.item)
-            })
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
+        logic.remove(item.item);
     }
+
     const check = async(item) => {
-        try{
-            data.data.find((datai) => datai.id == item.item.id).checked = !(data.data.find((datai) => datai.id == item.item.id).checked );
-            await updateDoc(modRef, {
-                data: data.data
-            });
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
+        logic.data.data.find((datai) => datai.id == item.item.id).checked = !(logic.data.data.find((datai) => datai.id == item.item.id).checked );
+        logic.update();
     }
-    const rename = async() =>{
+    
 
-    }
-
-    if(!data){
+    if(!logic.data){
         return(<ActivityIndicator style={style.loading}/>)
     }
     
@@ -110,7 +81,7 @@ export default function List(){
                 <TouchableOpacity onPress={() => {nav.goBack()}}>
                     <Ionicons color={style.txtc} size={wp(6)} name="arrow-back" style={style.back} />
                 </TouchableOpacity>
-                <Text style={style.title}>{data.name}</Text>
+                <Text style={style.title}>{logic.data.name}</Text>
                 <TouchableOpacity 
                         style={style.settings}
                         onPress={() => setSettingsModal(true)}
@@ -132,7 +103,7 @@ export default function List(){
                     </TouchableOpacity>
                 </View>
                 <FlatList
-                    data={data.data}
+                    data={logic.data.data}
                     renderItem={({item}) => <Item item={item}/>}
                     keyExtractor={item => item.id}
                     style={style.list}
@@ -149,7 +120,7 @@ export default function List(){
                      behavior="position"
                 keyboardVerticalOffset={hp(60)}
                 >
-                    <ModSettings colors={style.colors} id={id} modRef={modRef} data={data} pointerRef={pointerRef}/>
+                    <ModSettings colors={style.colors} id={id} modRef={modRef} data={logic.data} pointerRef={pointerRef}/>
                 </KeyboardAvoidingView>
                 </SlideUpModal>
             

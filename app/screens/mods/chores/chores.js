@@ -2,70 +2,48 @@ import { Ionicons } from "@expo/vector-icons";
 import Entypo from "@expo/vector-icons/Entypo";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { useContext, useEffect, useState } from "react";
+import { doc } from "firebase/firestore";
+import { useContext, useState } from "react";
 import { ActivityIndicator, Alert, Dimensions, FlatList, KeyboardAvoidingView, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import { SafeAreaView } from "react-native-safe-area-context";
-import { db } from "../../../firebase";
-import useAppColors from "../../background/Colors";
-import { userContext } from "../../background/Users";
-import ModSettings from "../../screens/editscreens/modSettings";
-import SlideUpModal from "../circlescreens/comps/slidemodal";
-import ChoreModal from "./comps/choremodal";
+import { db } from "../../../../firebase";
+import useAppColors from "../../../background/Colors";
+import { userContext } from "../../../background/Users";
+import SlideUpModal from "../../circlescreens/comps/slidemodal";
+import ModSettings from "../../editscreens/modSettings";
+import { useModules } from "../useModules";
+import ChoreModal from "./choremodal";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 export default function Chores(){
     const { id, user, circleID, page} = useLocalSearchParams();
+    const logic = useModules(id, user, circleID, page, "chores");
     const userdata = useContext(userContext);
-    const [data, setData] = useState(null);
     const [settingsModal, setSettingsModal] = useState(false);
     const [addModal, setAddModal] = useState(false);
-
     const style = useStyles();
     const nav = useNavigation();
    
     const modRef = doc(db, "circles", String(circleID), page, user, "chores", id);
     const pointerRef = doc(db, "circles", String(circleID), page, user);
     
-    useEffect(() => {
-        const unsubscribe = onSnapshot(modRef, (snapshot) => {
-            setData(snapshot.data());
-        }, (e) => {
-            console.error("Listener failed: ", e);
-        });
-        return unsubscribe;
-        
-    }, []);
+
     const addChore = async(chore, repeat) => {
-        try{
-            await updateDoc(modRef, {
-                data: arrayUnion({
-                    name: chore.name,
-                    who: chore.who,
-                    id: Math.random(),
-                    description: chore.description,
-                    lastdoneby: null,
-                    lastdone: null,
-                    repeat: repeat
-                })
-            })
-            setAddModal(false)
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
+        logic.add({
+            name: chore.name,
+            who: chore.who,
+            id: Math.random(),
+            description: chore.description,
+            lastdoneby: null,
+            lastdone: null,
+            repeat: repeat
+        })   
+        setAddModal(false)
     }
     const remove = async(item) => {
-         try{
-             await updateDoc(modRef, {
-                data: arrayRemove(item.item)
-            })
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
+         logic.remove(item.item)
     }
     const showAlert = (item) => {
          Alert.alert("Yay!", "Do you want to check off this task?", [
@@ -83,22 +61,16 @@ export default function Chores(){
     const check = async(item) => {
         
         if(item.item.repeat == null){
-            remove(item)
+            logic.remove(item.item)
             return;
         }
-        try{
-            data.data.find((datai) => datai.id == item.item.id).lastdone = Date();
-            data.data.find((datai) => datai.id == item.item.id).lastdoneby = userdata.userData.name;
-            await updateDoc(modRef, {
-                data: data.data
-            });
-        }catch(e){
-            console.log(e);
-            alert("error");
-        }
+            logic.data.data.find((datai) => datai.id == item.item.id).lastdone = Date();
+            logic.data.data.find((datai) => datai.id == item.item.id).lastdoneby = userdata.userData.name;
+            logic.update();
+       
     }
 
-    if(!data){
+    if(!logic.data){
         return(<ActivityIndicator style={style.loading}/>)
     }
     
@@ -187,7 +159,7 @@ export default function Chores(){
                 <TouchableOpacity onPress={() => {nav.goBack()}}>
                     <Ionicons color={style.txtc} size={wp(6)} name="arrow-back" style={style.back} />
                 </TouchableOpacity>
-                <Text style={style.title}>{data.name}</Text>
+                <Text style={style.title}>{logic.data.name}</Text>
                 <TouchableOpacity 
                         style={style.settings}
                         onPress={() => setSettingsModal(true)}
@@ -196,7 +168,7 @@ export default function Chores(){
                 </TouchableOpacity>
             </View>
             <View style={style.content}>
-                {(data.data.length == 0)? (
+                {(logic.data.data.length == 0)? (
                     <View style={[style.list, {height: hp(70)}]}>
                         <View style={{margin: "auto"}}>
                             <MaterialIcons name="check" size={hp(15)} color={style.txtc} style={{margin: "auto"}}/>
@@ -205,7 +177,7 @@ export default function Chores(){
                     </View>
                 ):(
                 <FlatList
-                    data={data.data}
+                    data={logic.data.data}
                     renderItem={({item}) => <Item item={item}/>}
                     keyExtractor={item => item.id}
                     style={style.list}
@@ -225,7 +197,7 @@ export default function Chores(){
                      behavior="position"
                 keyboardVerticalOffset={hp(60)}
                 >
-                    <ModSettings colors={style.colors} id={id} modRef={modRef} data={data} pointerRef={pointerRef}/>
+                    <ModSettings colors={style.colors} id={id} modRef={modRef} data={logic.data} pointerRef={pointerRef}/>
                 </KeyboardAvoidingView>
                 </SlideUpModal>
                     <Modal
