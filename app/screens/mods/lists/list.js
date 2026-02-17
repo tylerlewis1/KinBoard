@@ -11,7 +11,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { db } from "../../../../firebase";
 import useAppColors from "../../../background/Colors";
 import SlideUpModal from "../../circlescreens/comps/slidemodal";
-import ModSettings from "../../editscreens/modSettings";
+import ModSettings from "../modsettings/modSettings";
 import { useModules } from "../useModules";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
@@ -155,6 +155,7 @@ function useStyles(){
             color: colors.txt,
             fontWeight: "black",
             fontSize: wp(10),
+            width: wp(80),
             padding: hp(2)
         },
         input: {
