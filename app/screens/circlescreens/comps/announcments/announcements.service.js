@@ -23,6 +23,6 @@ export async function postAnnouncement(circleId, payload) {
   const announcmentDoc = doc(db, "circles", String(circleId));
   const announcmentsDoc = doc(collection(announcmentDoc, "home"), "announcements");
   const sendNotification = httpsCallable(functions, 'sendAnnouncmentNotification');
-  sendNotification({ id: circleId, title: ((payload.options) ? `New Poll From ${payload.who}`: `New Announcment From ${payload.who}`), msg: payload.msg});
+  sendNotification({ id: circleId, title: ((payload.options) ? `New Poll from ${payload.who}`: `New Announcment from ${payload.who}`), msg: payload.msg});
   await updateDoc(announcmentsDoc, { msgs: payload });
 }

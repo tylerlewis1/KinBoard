@@ -38,16 +38,17 @@ exports.recursiveDeleteCollection = onCall(async (request) => {
         throw new HttpsError("internal", "Failed to fully remove circle and assets.");
     }
 });
-exports.sendIndieNotification = onCall(async (request) => {
+exports.sendIndieNotification = onCall({ secrets: ["NATIVE_NOTIFY_TOKEN"] }, async (request) => {
   if(!request.auth){
      throw new HttpsError("unauthenticated", "User must be logged in.");
   }
     try {
+    const token = process.env.NATIVE_NOTIFY_TOKEN;
     const id = request.data.id;
     const response = await axios.post(`https://app.nativenotify.com/api/indie/notification`, {
       subID: id,
       appId: 33378,
-      appToken: process.env.NATIVE_NOTIFY_TOKEN,
+      appToken: token,
       title: 'Hello!',
       message: 'This is a test push notification'
     });
@@ -59,12 +60,13 @@ exports.sendIndieNotification = onCall(async (request) => {
   }
 });
 
-exports.sendAnnouncmentNotification = onCall(async (request) => {
+exports.sendAnnouncmentNotification = onCall({ secrets: ["NATIVE_NOTIFY_TOKEN"] }, async (request) => {
   if(!request.auth){
      throw new HttpsError("unauthenticated", "User must be logged in.");
   }
     try {
         const db = getFirestore();
+        const token = process.env.NATIVE_NOTIFY_TOKEN;
         const circleID = request.data.id;
         const title = request.data.title;
         const msg = request.data.msg;
@@ -78,7 +80,7 @@ exports.sendAnnouncmentNotification = onCall(async (request) => {
         const response = await axios.post(`https://app.nativenotify.com/api/indie/group/notification`, {
             subIDs: memberIds,
             appId: 33378,
-            appToken: process.env.NATIVE_NOTIFY_TOKEN,
+            appToken: token,
             title: title,
             message: msg
         });
