@@ -12,13 +12,13 @@ import { db } from "../../../../firebase";
 import useAppColors from "../../../background/Colors";
 import SlideUpModal from "../../circlescreens/comps/slidemodal";
 import ModSettings from "../modsettings/modSettings";
-import { useModules } from "../useModules";
+import { useModuleServices } from "../module.services";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 export default function List(){
     const { id, name, user, circleID, page} = useLocalSearchParams();
-    const logic = useModules(id, user, circleID, page, "list");
+    const logic = useModuleServices(id, user, circleID, page, "list");
     const style = useStyles();
     const nav = useNavigation();
     const [settingsModal, setSettingsModal] = useState(false);

@@ -1,6 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { useContext, useEffect, useRef, useState } from "react";
 import { Animated } from "react-native";
+import usePushNotifications from "./background/notifications/usePushNotification";
 import { userContext } from "./background/Users";
 import Login from "./screens/auth/Login";
 import Signup from "./screens/auth/Signup";
@@ -11,6 +12,7 @@ import Account from "./screens/main/account";
 import Dash from "./screens/main/dash";
 import Loading from "./screens/other/Loading";
 export default function Index() {
+  const notifications = usePushNotifications();
   const [init, setInit] = useState(true);
   const user = useContext(userContext);
   const Stack = createNativeStackNavigator();
@@ -43,6 +45,9 @@ export default function Index() {
       </Stack.Navigator>
     );
   } else {
+    if(user.userData.uid){
+      notifications.registerDeivce(user.userData.uid)
+    }
     return(  
       <Stack.Navigator screenOptions={{headerShown: false}}>
           <Stack.Screen name="Home" component={Dash}/>

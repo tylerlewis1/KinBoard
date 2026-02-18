@@ -88,6 +88,7 @@ function useStyle() {
         position: "absolute",
         width: wp(100),
         height: hp(90),
+        paddingBottom: hp(10),
         padding: wp(5),
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
     },

@@ -12,14 +12,14 @@ import useAppColors from "../../../background/Colors";
 import { userContext } from "../../../background/Users";
 import SlideUpModal from "../../circlescreens/comps/slidemodal";
 import ModSettings from "../modsettings/modSettings";
-import { useModules } from "../useModules";
+import { useModuleServices } from "../module.services";
 import ChoreModal from "./choremodal";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 export default function Chores(){
     const { id, user, circleID, page} = useLocalSearchParams();
-    const logic = useModules(id, user, circleID, page, "chores");
+    const logic = useModuleServices(id, user, circleID, page, "chores");
     const userdata = useContext(userContext);
     const [settingsModal, setSettingsModal] = useState(false);
     const [addModal, setAddModal] = useState(false);

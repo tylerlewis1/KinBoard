@@ -11,7 +11,6 @@ import { useContext, useState } from "react";
 import { Alert, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import global from "../../styles/main/global";
-
 export default function Account() {
     const user = useContext(userContext);
     const nav = useNavigation();
@@ -131,7 +130,10 @@ export default function Account() {
                 
 
                 <TouchableOpacity 
-                onPress={() => {auth.signOut()}}
+                onPress={() => {
+                    auth.signOut();
+
+                }}
                 style={[global.btn, {backgroundColor: "#FF6F61"}]}>
                     <Text style={global.btntxt}>Sign out</Text>
                 </TouchableOpacity>

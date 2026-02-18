@@ -51,12 +51,14 @@ export default function Dash() {
                                         ><Text style={style.buttontxt}>Join Circle</Text></TouchableOpacity>
 
                             <TouchableOpacity 
-                                        style={style.button}
-                                        onPress={() => {
-                                            nav.navigate("AddCircle");
-                                            setModalVisible(false);
-                                        }}
-                                        ><Text style={style.buttontxt}>Create Circle</Text></TouchableOpacity>
+                                style={style.button}
+                                onPress={() => {
+                                    nav.navigate("AddCircle");
+                                    setModalVisible(false);
+                                }}
+                            >
+                                <Text style={style.buttontxt}>Create Circle</Text>
+                            </TouchableOpacity>
                         </View>
 
                     </View>

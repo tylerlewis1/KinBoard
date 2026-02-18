@@ -1,8 +1,8 @@
-const { onCall, HttpsError } = require("firebase-functions/v2/https");
+const { onCall, HttpsError, onRequest } = require("firebase-functions/v2/https");
 const { getFirestore, FieldValue } = require("firebase-admin/firestore");
 const { getStorage } = require("firebase-admin/storage"); // Added for Storage
 const admin = require("firebase-admin");
-
+const axios = require("axios");
 admin.initializeApp();
 
 exports.recursiveDeleteCollection = onCall(async (request) => {
@@ -37,4 +37,55 @@ exports.recursiveDeleteCollection = onCall(async (request) => {
         console.error("Total Cleanup failed:", error);
         throw new HttpsError("internal", "Failed to fully remove circle and assets.");
     }
+});
+exports.sendIndieNotification = onCall(async (request) => {
+  if(!request.auth){
+     throw new HttpsError("unauthenticated", "User must be logged in.");
+  }
+    try {
+    const id = request.data.id;
+    const response = await axios.post(`https://app.nativenotify.com/api/indie/notification`, {
+      subID: id,
+      appId: 33378,
+      appToken: process.env.NATIVE_NOTIFY_TOKEN,
+      title: 'Hello!',
+      message: 'This is a test push notification'
+    });
+
+    return{ success: true, data: response.data };
+  } catch (error) {
+    console.error("Error sending notification:", error);
+    return{ success: false, error: error.message };
+  }
+});
+
+exports.sendAnnouncmentNotification = onCall(async (request) => {
+  if(!request.auth){
+     throw new HttpsError("unauthenticated", "User must be logged in.");
+  }
+    try {
+        const db = getFirestore();
+        const circleID = request.data.id;
+        const title = request.data.title;
+        const msg = request.data.msg;
+        const membersRef = db.collection('circles').doc(circleID).collection('members');
+        const snapshot = await membersRef.get();
+        if (snapshot.empty) {
+            return;
+        }
+        const memberIds = snapshot.docs.map(doc => doc.id);
+        console.log(memberIds);
+        const response = await axios.post(`https://app.nativenotify.com/api/indie/group/notification`, {
+            subIDs: memberIds,
+            appId: 33378,
+            appToken: process.env.NATIVE_NOTIFY_TOKEN,
+            title: title,
+            message: msg
+        });
+
+        return{ success: true, data: response.data };
+  } catch (error) {
+    console.error("Error sending notification:", error);
+    return{ success: false, error: error.message };
+  }
 });

@@ -11,14 +11,14 @@ import { db } from "../../../../firebase";
 import useAppColors from "../../../background/Colors";
 import SlideUpModal from "../../circlescreens/comps/slidemodal";
 import ModSettings from "../modsettings/modSettings";
-import { useModules } from "../useModules";
+import { useModuleServices } from "../module.services";
 import ContactModal from "./contactmodal";
  const { width, height } = Dimensions.get("window");
 const wp = (percent) => width * (percent / 100);
 const hp = (percent) => height * (percent / 100);
 export default function Contacts(){
     const { id, user, circleID, page} = useLocalSearchParams();
-    const logic = useModules(id, user, circleID, page, "contacts");
+    const logic = useModuleServices(id, user, circleID, page, "contacts");
     const [settingsModal, setSettingsModal] = useState(false);
     const [addModal, setAddModal] = useState(false);
 

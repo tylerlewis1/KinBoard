@@ -2,7 +2,7 @@ import { arrayRemove, arrayUnion, doc, onSnapshot, updateDoc } from "firebase/fi
 import { useEffect, useState } from "react";
 import { db } from "../../../firebase";
 
-export function useModules(id, user, circleID, page, type) {
+export function useModuleServices(id, user, circleID, page, type) {
     const [data, setData] = useState(null);
 
     const modRef = doc(db, "circles", String(circleID), page, user, type, id);
