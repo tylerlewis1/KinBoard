@@ -13,12 +13,20 @@
       "bundleIdentifier": "com.tylerlewis.kinboard",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSCameraUsageDescription": "This app needs the camera so users can take and upload profile pictures and cover images for their circles. It can also be used to scan qr codes to join circles.",
-        "NSPhotoLibraryUsageDescription": "This app needs access to your photos so you can upload images to your profile and for your circle cover iamge."
+        "NSCameraUsageDescription": "Allow access to your camera to take profile photos, customize your circle cover images, and scan QR codes to join new circles.",
+        "NSPhotoLibraryUsageDescription": "Allow access to your photo library to select and upload profile pictures and cover images for your circles.",
+        "NSCalendarsUsageDescription": "Allow access to your calendar to create, sync, and manage upcoming circle events directly from the app."
       }
     },
     "android": {
       "adaptiveIcon": {
+        "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.READ_CALENDAR",
+        "android.permission.WRITE_CALENDAR",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+        ],
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
         "backgroundImage": "./assets/images/android-icon-background.png",
