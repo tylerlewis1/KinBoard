@@ -113,6 +113,20 @@ export default function Home({circleData}) {
                                 </TouchableOpacity>
                             );
                         }
+                         if(mods.type == "events"){
+                            return(   
+                                <TouchableOpacity key={mods.id}
+                                    onPress={() =>
+                                        router.navigate({
+                                            pathname: "/screens/mods/events/events", 
+                                            params: {id: mods.id, name: mods.name, circleID: circleData.id, user: "modules", page: "home"}
+                                        })
+                                    }
+                                >
+                                    <Btn colors={colors} data={mods}/>
+                                </TouchableOpacity>
+                            );
+                        }
                     })
                    }
                 </View>
