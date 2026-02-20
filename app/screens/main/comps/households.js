@@ -59,7 +59,7 @@ export default function HouseHolds({userdata, setModalVisible}){
     return(
         <View style={style.content}>
             <Text style={style.header}>Circles</Text>
-            <ScrollView style={style.btnscroll} contentContainerStyle={style.gridContainer}>
+            <ScrollView style={style.btnscroll} showsVerticalScrollIndicator={false} contentContainerStyle={style.gridContainer}>
                {circles.map((data) => {
                 if(data == null){
                     return;
@@ -90,6 +90,7 @@ function useStyle() {
         height: hp(90),
         paddingBottom: hp(10),
         padding: wp(5),
+        
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.06)'
     },
     txt: {

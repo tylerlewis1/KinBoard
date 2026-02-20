@@ -9,6 +9,7 @@ const colors = useAppColors();
 return StyleSheet.create({
    content: {
       backgroundColor: colors.background,
+      
    }, 
    header: {
         display: "flex",

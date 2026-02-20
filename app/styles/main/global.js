@@ -7,7 +7,6 @@ const hp = (percent) => height * (percent / 100);
 
 export default StyleSheet.create({
    container: {
-
    },
    pfp: {
     borderRadius: 1000,
@@ -38,7 +37,7 @@ export default StyleSheet.create({
     textAlign: "center"
    },
    container: {
-      height: "80%"
+      height: "80%",
    },
    back: {
       paddingLeft: wp(3)
