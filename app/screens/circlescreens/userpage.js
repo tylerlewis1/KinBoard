@@ -98,6 +98,20 @@ export default function UserPage({circleData, memberData, selection}) {
                                 </TouchableOpacity>
                             );
                         }
+                        if(mods.type == "chat"){
+                            return(   
+                                <TouchableOpacity key={mods.id}
+                                    onPress={() =>
+                                        router.navigate({
+                                            pathname: "/screens/mods/chat/chat", 
+                                            params: {id: mods.id, name: mods.name, circleID: circleData.id, user: memberData.id, page: "members"}
+                                        })
+                                    }
+                                >
+                                    <Btn colors={colors} data={mods}/>
+                                </TouchableOpacity>
+                            );
+                        }
                          if(mods.type == "events"){
                             return(   
                                 <TouchableOpacity key={mods.id}

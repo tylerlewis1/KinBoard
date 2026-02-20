@@ -127,6 +127,20 @@ export default function Home({circleData}) {
                                 </TouchableOpacity>
                             );
                         }
+                        if(mods.type == "chat"){
+                            return(   
+                                <TouchableOpacity key={mods.id}
+                                    onPress={() =>
+                                        router.navigate({
+                                            pathname: "/screens/mods/chat/chat", 
+                                            params: {id: mods.id, name: mods.name, circleID: circleData.id, user: "modules", page: "home"}
+                                        })
+                                    }
+                                >
+                                    <Btn colors={colors} data={mods}/>
+                                </TouchableOpacity>
+                            );
+                        }
                     })
                    }
                 </View>

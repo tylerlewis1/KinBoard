@@ -64,6 +64,8 @@ export default function Btn({ data, colors}) {
             return { component: <MaterialIcons size={size} color={color} name="people-outline" /> };
         } else if (data.type.startsWith("savings goal")) {
             return { component: <FontAwesome5 size={size} color={color} name="piggy-bank" /> };
+        } else if (data.type.startsWith("chat")) {
+            return { component: <MaterialIcons size={size} color={color} name="message" /> };
         }
         return { component: <Ionicons size={size} color={color} name="ellipsis-horizontal" /> };
     };

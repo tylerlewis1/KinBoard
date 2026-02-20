@@ -17,7 +17,7 @@ export default function EventModal({colors, wp, hp, addEvent}) {
     })
     return(
         <View style={style.content}>
-            <Text style={style.txt}>Add a event</Text>
+            <Text style={[style.txt, {paddingBottom: 10}]}>Add a event</Text>
             <View style={style.form}>
                 <TextInput
                     style={style.input}
@@ -67,7 +67,7 @@ function useStyles(colors, wp, hp){
         txt: {
             color: colors.txt,
             fontWeight: "300",
-            fontSize: wp(8)
+            fontSize: wp(8),
         },
         form: {
             margin: "auto",
