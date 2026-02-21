@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { postAnnouncement, voteAnnouncement } from "./announcements.service";
-
 export function useAnnouncements(circleData, announcments, user) {
   const [modalVis, setModalVis] = useState(false);
   const [msg, setMsg] = useState("");

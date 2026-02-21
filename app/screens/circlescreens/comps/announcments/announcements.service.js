@@ -1,6 +1,6 @@
 import { collection, doc, runTransaction, updateDoc } from "firebase/firestore";
 import { httpsCallable } from "firebase/functions";
-import { db, functions } from "../../../../../firebase";
+import { auth, db, functions } from "../../../../../firebase";
 export async function voteAnnouncement(circleId, optionId, uid) {
   const announcmentDoc = doc(db, "circles", String(circleId));
   const announcmentsDoc = doc(collection(announcmentDoc, "home"), "announcements");
@@ -23,6 +23,6 @@ export async function postAnnouncement(circleId, payload) {
   const announcmentDoc = doc(db, "circles", String(circleId));
   const announcmentsDoc = doc(collection(announcmentDoc, "home"), "announcements");
   const sendNotification = httpsCallable(functions, 'sendAnnouncmentNotification');
-  sendNotification({ id: circleId, title: ((payload.options) ? `New Poll from ${payload.who}`: `New Announcment from ${payload.who}`), msg: payload.msg});
+  sendNotification({ id: circleId, title: ((payload.options) ? `New Poll from ${payload.who}`: `New Announcment from ${payload.who}`), msg: payload.msg, sender: auth.currentUser.uid});
   await updateDoc(announcmentsDoc, { msgs: payload });
 }
