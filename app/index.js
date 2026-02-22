@@ -8,7 +8,7 @@ import Signup from "./screens/auth/Signup";
 import CircleDash from "./screens/circlescreens/circledash";
 import AddCircle from "./screens/editscreens/addCircles";
 import JoinCircle from "./screens/editscreens/joinCircle";
-import Account from "./screens/main/account";
+import Account from "./screens/main/account/account";
 import Dash from "./screens/main/dash";
 import Loading from "./screens/other/Loading";
 export default function Index() {

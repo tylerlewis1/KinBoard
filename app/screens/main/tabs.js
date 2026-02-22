@@ -1,6 +1,6 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Account from "./account";
+import Account from "./account/account";
 import Dash from "./dash";
 const Tab = createBottomTabNavigator();
 
