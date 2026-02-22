@@ -57,7 +57,14 @@ export default function Contacts(){
             </TouchableOpacity>
         );
     };
-
+    const formatPhoneNumber = (phoneNumberString) => {
+        const cleaned = ('' + phoneNumberString).replace(/\D/g, '');
+        const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+        if (match) {
+            return '(' + match[1] + ') ' + match[2] + '-' + match[3];
+        }
+        return phoneNumberString;
+    }
     const Item = (item) => {
         return(
             <Swipeable 
@@ -65,7 +72,7 @@ export default function Contacts(){
             >
                 <Pressable style={style.listitem} key={item.id} onPress={() => {Linking.openURL(`tel:${item.item.phone}`)}} >
                     <Text style={style.name}>{item.item.name}</Text>
-                    <Text style={style.phone}>{item.item.phone}</Text>
+                    <Text style={style.phone}>{formatPhoneNumber(item.item.phone)}</Text>
                     <Text style={style.description}>{item.item.description}</Text>
                 </Pressable>
             </Swipeable>
