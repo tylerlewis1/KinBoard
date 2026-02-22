@@ -6,11 +6,13 @@ import { httpsCallable } from "firebase/functions";
 import { useState } from "react";
 import { ActivityIndicator, Dimensions, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { TextInput } from 'react-native-gesture-handler';
-import { auth } from "../../../firebase";
+import { auth } from "../../../../../firebase";
+import useSettings from "./useSettings";
 export default function CircleSettings({id, circleData, memberData, colors}){
     const [isOwner, setIsOwner] = useState(false);
     const [name, setName] = useState("");
     const nav = useNavigation();
+    const logic = useSettings();
     useState(() => {
         setIsOwner((memberData?.find(item => item.uid === auth.currentUser.uid).role == "Owner"));
     }, []); 
@@ -112,7 +114,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                             {(circleData.cover) ? (
                                 <Image style={style.cover} cachePolicy="disk" source={{uri: circleData.cover}}/> 
                             ): (
-                            <Image style={style.cover} cachePolicy="disk" source={require("../../../assets/images/addimg.png")}/> 
+                            <Image style={style.cover} cachePolicy="disk" source={require("../../../../../assets/images/addimg.png")}/> 
                             )}
                          </TouchableOpacity>   
                         <View style={{display: "flex", flexDirection: "column"}}>
@@ -150,7 +152,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                             {(circleData.cover) ? (
                                 <Image style={style.cover} cachePolicy="disk" source={{uri: circleData.cover}}/> 
                             ): (
-                            <Image style={style.cover} cachePolicy="disk" source={require("../../../assets/images/logotb.png")}/> 
+                            <Image style={style.cover} cachePolicy="disk" source={require("../../../../../assets/images/logotb.png")}/> 
                             )}
                          </TouchableOpacity>   
                         <View style={{display: "flex", flexDirection: "column"}}>
@@ -164,7 +166,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                         </View>        
                     </View>
                     <View>
-                        <TouchableOpacity style={style.btn}>
+                        <TouchableOpacity style={style.btn} onPress={() => logic.removeUser(auth.currentUser.uid, circleData.id)}>
                             <Text style={style.btntxt}>Leave Circle</Text>
                         </TouchableOpacity>
                     </View>

@@ -66,7 +66,7 @@ export default function CompSettings({id, colors, modRef, data, pointerRef}){
                     <View style={style.header}>
      
                         <View style={{display: "flex", flexDirection: "column"}}>
-                            <TextInput style={style.title} onChangeText={setName} placeholder={data.name} returnKeyLabel="done" returnKeyType="done"/>
+                            <TextInput style={style.title} onChangeText={setName} placeholder={data.name} placeholderTextColor={style.offtxt} returnKeyLabel="done" returnKeyType="done"/>
                         </View>   
                     </View>
                     <View>

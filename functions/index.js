@@ -92,3 +92,26 @@ exports.sendAnnouncmentNotification = onCall({ secrets: ["NATIVE_NOTIFY_TOKEN"] 
     return{ success: false, error: error.message };
   }
 });
+
+exports.removeUser = onCall(async (request) => {
+  if(!request.auth){
+     throw new HttpsError("unauthenticated", "User must be logged in.");
+  }
+  try{
+    const circleId = String(request.data.cid);
+    const userId = String(request.data.uid);
+    const db = getFirestore();
+    const userRef = db.collection("users").doc(userId);
+    const memberDoc = db.collection("circles").doc(circleId).collection("members").doc(userId);
+    //remove from user
+    await userRef.update({
+        circles: FieldValue.arrayRemove(Number(circleId))
+    });
+    await memberDoc.delete();
+
+    return{ success: true};
+  } catch(e){
+    console.log(e);
+    return{ success: false, error: e };
+  }
+});

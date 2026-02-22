@@ -10,7 +10,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../../firebase";
 import useStyles from "../../styles/circle/circledash";
-import CircleSettings from "../editscreens/circleSettings";
+import CircleSettings from "../editscreens/comps/circleSettings/circleSettings";
 import Btn from "./comps/button";
 import Content from "./comps/content";
 import NavBar from "./comps/navbar";
@@ -126,12 +126,12 @@ export default function CircleDash(){
                     type: type,
                     circleID: circleData.id,
                     id: newDocRef.id,
-                    name: type
+                    name: name
                 })
                 batch.set(userMods, {
                     mods: arrayUnion({
                         id: newDocRef.id,
-                        name: type,
+                        name: namr,
                         type: type
                     })
                 }, {merge: true})
@@ -175,7 +175,7 @@ export default function CircleDash(){
                     <TouchableOpacity style={style.add} 
                         onPress={() => {SetShowAddModal(true)}}
                     >
-                        <Text style={style.txt}>+</Text>
+                        <Ionicons color={style.iconc} style={style.txt} name="add"/>
                     </TouchableOpacity>
                 ):(
                     <></>
@@ -186,7 +186,7 @@ export default function CircleDash(){
                     onClose={() => SetShowAddModal(false)}
                     >
                     <View style={style.addheader}>
-                        <Text style={[{textAlign: "center", top: hp(3), fontSize: hp(3), zIndex: 10000}, style.modaltxt]}>Add Module</Text>
+                        <Text style={[{textAlign: "center", top: hp(1.5), fontSize: hp(3), zIndex: 10000}, style.modaltxt]}>Add Module</Text>
                     </View>
                     <ScrollView style={style.addcontent}
                         contentContainerStyle={{

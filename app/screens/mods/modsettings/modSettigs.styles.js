@@ -41,7 +41,8 @@ const hp = (percent) => height * (percent / 100);
             color: colors.txt
         },date: {
             color: colors.txt
-        }
+        },
+        offtxt: colors.offtxt
         
     });
 }

@@ -50,12 +50,11 @@ return StyleSheet.create({
     backgroundColor: colors.accent,
     width: hp(7),
     height: hp(7),
-    borderRadius: 10000
+    borderRadius: 1000
    },
    txt: {
     fontSize: hp(5),
-    textAlign: "center",
-    top: hp(.2),
+    margin: "auto",
     color: colors.txt,
    },
    addcontent: {
