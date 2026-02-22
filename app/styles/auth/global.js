@@ -1,6 +1,10 @@
 
+import useAppColors from "@/app/background/Colors";
 import { StyleSheet } from "react-native";
-export default StyleSheet.create({
+export default function useStyles(){ 
+    const colors = useAppColors();
+return StyleSheet.create({
+
     header:{
         fontSize: "80",
         fontWeight: "bold",
@@ -13,11 +17,11 @@ export default StyleSheet.create({
     },
     txtinput: {
         width: "80%",
-        backgroundColor: "#c1c0c0",
+        backgroundColor: colors.offtxt,
         display: "block",
         margin: "auto",
         padding: 20,
-        color: "#000000",
+        color: "black",
         borderRadius: 20,
         fontSize: 17,
         marginBottom: 20,
@@ -36,7 +40,13 @@ export default StyleSheet.create({
         textAlign: "center",
         fontWeight: "500",
         fontSize: 20
-    }
+    },
+    bg: {
+        backgroundColor: colors.background,
+        flex: 1
+    },
+    txt: colors.txt
     
     
 });
+}

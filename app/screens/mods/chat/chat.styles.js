@@ -113,6 +113,7 @@ export default function useStyles() {
         sendBtn: {
             marginLeft: wp(3),
             marginBottom: hp(0.5),
+            color: colors.accent
         },
 
         delbtn: {

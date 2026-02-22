@@ -6,9 +6,10 @@ import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../../firebase";
-import globalstyle from "../../styles/auth/global";
+import useStyles from "../../styles/auth/global";
 export default function Signup(){
     const nav = useNavigation();
+    const globalstyle = useStyles();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [name, setName] = useState("");
@@ -33,7 +34,7 @@ export default function Signup(){
         }
     }
     return(
-        <SafeAreaView>
+        <SafeAreaView style={globalstyle.bg}>
             <Image cachePolicy="disk" style={globalstyle.logo} source={require("../../../assets/images/logotb.png")}/>
             <View>
                  <TextInput
@@ -67,8 +68,8 @@ export default function Signup(){
             ><Text style={globalstyle.buttontxt}>Sign up</Text></TouchableOpacity>
 
             <TouchableOpacity
-                onPress={() => {nav.navigate("Login")}}
-            ><Text style={globalstyle.buttontxt}>Have a account?</Text></TouchableOpacity>
+                onPress={() => {nav.goBack()}}
+            ><Text style={[globalstyle.buttontxt, {color: globalstyle.txt}]}>Have a account?</Text></TouchableOpacity>
         </SafeAreaView>
     )
 }

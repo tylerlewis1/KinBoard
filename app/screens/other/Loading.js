@@ -38,13 +38,13 @@ export default function Loading() {
   }, []);
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Animated.Image
-        source={require("../../../assets/images/logotb.png")}
-        style={[styles.img, logoStyle]}
-        resizeMode="contain"
-      />
-    </SafeAreaView>
+      <SafeAreaView style={styles.container}>
+        <Animated.Image
+          source={require("../../../assets/images/logotb.png")}
+          style={[styles.img, logoStyle]}
+          resizeMode="contain"
+        />
+      </SafeAreaView>
   );
 }
 function useStyle() {
@@ -60,6 +60,5 @@ function useStyle() {
       width: "80%",
       height: "80%",
     },
-
   });
 }

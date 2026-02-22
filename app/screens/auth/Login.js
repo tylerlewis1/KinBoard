@@ -5,9 +5,10 @@ import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../firebase";
-import globalstyle from "../../styles/auth/global";
+import useStyles from "../../styles/auth/global";
 export default function Login(){
     const nav = useNavigation();
+    const globalstyle = useStyles();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const signin = async() => {
@@ -29,7 +30,7 @@ export default function Login(){
         }
     }
     return(
-        <SafeAreaView>
+        <SafeAreaView style={globalstyle.bg}>
             {/* <Text style={globalstyle.header}>Kin Board</Text> */}
             <Image cachePolicy="disk" style={globalstyle.logo} source={require("../../../assets/images/logotb.png")}/>
             <View>

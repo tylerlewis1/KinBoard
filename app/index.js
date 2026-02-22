@@ -29,33 +29,40 @@ export default function Index() {
   }, []);
 
 
- if (init) {
-    return (
-      <Animated.View style={{ flex: 1, opacity }}>
-        <Loading />
-      </Animated.View>
-    );
-  }
 
   if(user.userData == null){
     return (
+      <>
+      {init && (
+         <Animated.View style={{position: "absolute", width: "100%", height: "100%", zIndex: 1000, opacity}}>
+          <Loading/>
+        </Animated.View>
+      )}
       <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Login" component={Login}/>
         <Stack.Screen name="Signup" component={Signup}/>
       </Stack.Navigator>
+      </>
     );
   } else {
     if(user.userData.uid){
       notifications.registerDeivce(user.userData.uid)
     }
     return(  
-      <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Home" component={Dash}/>
-          <Stack.Screen name="Account" component={Account}/>
-          <Stack.Screen name="AddCircle" component={AddCircle}/>
-          <Stack.Screen name="JoinCircle" component={JoinCircle}/>
-          <Stack.Screen name="CircleDash" component={CircleDash}/>
-      </Stack.Navigator>
+      <>
+        {init && (
+          <Animated.View style={{position: "absolute", width: "100%", height: "100%", zIndex: 1000, opacity}}>
+            <Loading/>
+          </Animated.View>
+        )}
+        <Stack.Navigator screenOptions={{headerShown: false}}>
+            <Stack.Screen name="Home" component={Dash}/>
+            <Stack.Screen name="Account" component={Account}/>
+            <Stack.Screen name="AddCircle" component={AddCircle}/>
+            <Stack.Screen name="JoinCircle" component={JoinCircle}/>
+            <Stack.Screen name="CircleDash" component={CircleDash}/>
+        </Stack.Navigator>
+      </>
     )
   }
 
