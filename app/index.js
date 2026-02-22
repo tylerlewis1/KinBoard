@@ -9,7 +9,7 @@ import CircleDash from "./screens/circlescreens/circledash";
 import AddCircle from "./screens/editscreens/addCircles";
 import JoinCircle from "./screens/editscreens/joinCircle";
 import Account from "./screens/main/account/account";
-import Dash from "./screens/main/dash";
+import Dash from "./screens/main/dash/dash";
 import Loading from "./screens/other/Loading";
 export default function Index() {
   const notifications = usePushNotifications();
