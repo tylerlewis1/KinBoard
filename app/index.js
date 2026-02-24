@@ -6,7 +6,7 @@ import { userContext } from "./background/Users";
 import Login from "./screens/auth/Login";
 import Signup from "./screens/auth/Signup";
 import CircleDash from "./screens/circlescreens/circledash";
-import AddCircle from "./screens/editscreens/addCircles";
+import AddCircle from "./screens/editscreens/addCircle/AddCircle";
 import JoinCircle from "./screens/editscreens/joinCircle";
 import Account from "./screens/main/account/account";
 import Dash from "./screens/main/dash/dash";
