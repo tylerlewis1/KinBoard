@@ -7,7 +7,7 @@ import Login from "./screens/auth/Login";
 import Signup from "./screens/auth/Signup";
 import CircleDash from "./screens/circlescreens/circledash";
 import AddCircle from "./screens/editscreens/addCircle/AddCircle";
-import JoinCircle from "./screens/editscreens/joinCircle";
+import JoinCircle from "./screens/editscreens/joinCircle/JoinCircle";
 import Account from "./screens/main/account/account";
 import Dash from "./screens/main/dash/dash";
 import Loading from "./screens/other/Loading";
