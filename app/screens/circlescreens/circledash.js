@@ -5,7 +5,7 @@ import { Image } from "expo-image";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import { arrayUnion, collection, doc, onSnapshot, updateDoc, writeBatch } from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
-import { Dimensions, Text, TouchableOpacity, View } from "react-native";
+import { Dimensions, KeyboardAvoidingView, Text, TouchableOpacity, View } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../../firebase";
@@ -216,7 +216,12 @@ export default function CircleDash(){
                     visible={settingsModal}
                     onClose={() => setSettingsModal(false)}
                 >
-                    <CircleSettings colors={style.colors} id={id} circleData={circleData} memberData={memberData}/>
+                    <KeyboardAvoidingView
+                        behavior="position"
+                        keyboardVerticalOffset={hp(60)}
+                    >
+                        <CircleSettings colors={style.colors} id={id} circleData={circleData} memberData={memberData}/>
+                    </KeyboardAvoidingView>
                 </SlideUpModal>
         </SafeAreaView>
     )

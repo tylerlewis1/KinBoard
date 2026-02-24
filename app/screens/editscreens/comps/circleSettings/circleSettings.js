@@ -118,7 +118,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                             )}
                          </TouchableOpacity>   
                         <View style={{display: "flex", flexDirection: "column"}}>
-                        <TextInput style={style.title} placeholder={circleData.name} placeholderTextColor={colors.offtxt} onChangeText={setName}/>
+                        <TextInput style={style.title} placeholder={circleData.name} placeholderTextColor={colors.offtxt} onChangeText={setName} returnKeyLabel='done' returnKeyType='done'/>
                         <Text style={style.date}>Created {circleData.created?.toDate?.()?.toLocaleString('en-US', {
                                     month: 'short',
                                     day: 'numeric',
