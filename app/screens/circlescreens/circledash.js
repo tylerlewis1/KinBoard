@@ -126,12 +126,12 @@ export default function CircleDash(){
                     type: type,
                     circleID: circleData.id,
                     id: newDocRef.id,
-                    name: name
+                    name: type
                 })
                 batch.set(userMods, {
                     mods: arrayUnion({
                         id: newDocRef.id,
-                        name: namr,
+                        name: type,
                         type: type
                     })
                 }, {merge: true})
