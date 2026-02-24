@@ -1,115 +1,165 @@
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { TextInput } from "react-native-gesture-handler";
-import DateTimeModal from './datetimemodal';
-export default function EventModal({colors, wp, hp, addEvent}) {
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import DateTimeModal from "./datetimemodal";
+export default function EventModal({ colors, wp, hp, addEvent }) {
     const style = useStyles(colors, wp, hp);
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(false);
     const [event, setEvent] = useState({
         name: "",
         phone: "",
         description: "",
-        date: (new Date()),
+        date: new Date(),
         formattedDate: null,
-        endDate: (new Date()),
+        endDate: new Date(),
         formattedEndDate: null,
         location: ""
-    })
-    return(
+    });
+
+    const isReady = event.name.trim() !== "" && event.formattedDate;
+
+    return (
         <View style={style.content}>
-            <Text style={[style.txt, {paddingBottom: 10}]}>Add a event</Text>
+            <View style={style.handle} />
+            
+            <Text style={style.title}>New Event</Text>
+            
             <View style={style.form}>
+                <Text style={style.label}>EVENT NAME</Text>
                 <TextInput
                     style={style.input}
-                    placeholderTextColor={colors.txt}
-                    placeholder="Name"
+                    placeholderTextColor={colors.txt + "80"} // Semi-transparent
+                    placeholder="E.g. Family Dinner"
+                    placeholderTextColor={colors.offtxt}
                     onChangeText={(value) => setEvent(prev => ({ ...prev, name: value }))}
                 />
-                <TouchableOpacity style={[style.active, style.btn, {marginBottom: hp(2)}]}
+
+                <Text style={style.label}>SCHEDULE</Text>
+                <TouchableOpacity 
+                    style={[style.timeBtn, event.formattedDate ? style.active : style.inactiveBtn]}
                     onPress={() => setOpen(!open)}
                 >
-                    <Text style={style.btntxt}>{event.formattedDate? `${event.formattedDate} to ${event.formattedEndDate}`:"Set Time"}</Text>
+                    <Text style={[style.btntxt, { color: event.formattedDate ? '#FFF' : colors.txt }]}>
+                        {event.formattedDate ? `${event.formattedDate} → ${event.formattedEndDate}` : "Select Date & Time"}
+                    </Text>
                 </TouchableOpacity>
                     
-                <DateTimeModal event={event} open={open} setOpen={setOpen} style={style} setEvent={setEvent}/>
+    
+                <DateTimeModal event={event} open={open} setOpen={setOpen} style={style} setEvent={setEvent}/> 
 
+                <Text style={style.label}>DETAILS (OPTIONAL)</Text>
                 <TextInput
                     style={style.input}
-                    placeholderTextColor={colors.txt}
-                    placeholder="Description (optional)"
+                    placeholderTextColor={colors.offtxt}
+                    placeholder="Description"
                     onChangeText={(value) => setEvent(prev => ({ ...prev, description: value }))}
                 /> 
                 <TextInput
                     style={style.input}
-                    placeholderTextColor={colors.txt}
-                    placeholder="Location (optional)"
+                    placeholderTextColor={colors.offtxt}
+                    placeholder="Location"
                     onChangeText={(value) => setEvent(prev => ({ ...prev, location: value }))}
                 /> 
-                <TouchableOpacity style={[style.btn, (!(event.name != "") || !(event.date)) ? style.inactive: style.active]} disabled={ (!(event.name != "") || !(event.date))} onPress={() => {addEvent(event)}}>
-                    <Text style={style.btntxt}>Add</Text>
+
+                <TouchableOpacity 
+                    style={[style.submitBtn, !isReady ? style.disabled : style.active]} 
+                    disabled={!isReady} 
+                    onPress={() => addEvent(event)}
+                >
+                    <Text style={style.submitBtnTxt}>Create Event</Text>
                 </TouchableOpacity>
-                
             </View>
         </View>
-    )
+    );
 }
-function useStyles(colors, wp, hp){
 
+function useStyles(colors, wp, hp) {
     return StyleSheet.create({
         content: {
             backgroundColor: colors.compbg,
-            width: wp(80),
-            margin: "auto",
-            top: hp(30),
-            padding: wp(5),
-            borderRadius: 10,
+            width: wp(90),
+            alignSelf: "center",
+            top: hp(20),
+            padding: wp(6),
+            borderRadius: 25,
+            shadowColor: "#000",
+            shadowOffset: { width: 0, height: 10 },
+            shadowOpacity: 0.2,
+            shadowRadius: 20,
+            elevation: 10,
         },
-        txt: {
+        handle: {
+            width: 40,
+            height: 5,
+            backgroundColor: colors.offtxt,
+            borderRadius: 10,
+            alignSelf: 'center',
+            marginBottom: 15
+        },
+        title: {
             color: colors.txt,
-            fontWeight: "300",
-            fontSize: wp(8),
+            fontWeight: "800",
+            fontSize: wp(7),
+            marginBottom: hp(2),
+        },
+        label: {
+            fontSize: wp(3),
+            fontWeight: "700",
+            marginBottom: 5,
+            letterSpacing: 1,
+            color: colors.offtxt
         },
         form: {
-            margin: "auto",
-            
+            width: '100%',
         },
         input: {
-            backgroundColor: colors.compbgl,
-            padding: hp(1),
-            borderRadius: 10,
-            width: wp(70),
-            marginBottom: hp(2),
-            color: colors.txt
+            backgroundColor: colors.compbgl || "#f0f0f0",
+            padding: hp(1.8),
+            borderRadius: 15,
+            width: "100%",
+            marginBottom: hp(2.5),
+            color: colors.txt,
+            fontSize: 16,
         },
-        btn: {
-            margin: "auto",
-            padding: wp(3),
-            borderRadius: 10,
-            width: wp(70)
-            
+        timeBtn: {
+            padding: hp(1.8),
+            borderRadius: 15,
+            width: "100%",
+            marginBottom: hp(2.5),
+            borderWidth: 1,
+            borderColor: colors.accent + "40",
+            justifyContent: 'center'
+        },
+        submitBtn: {
+            marginTop: hp(1),
+            padding: hp(2),
+            borderRadius: 15,
+            width: "100%",
+            shadowColor: colors.accent,
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.3,
+            shadowRadius: 5,
         },
         btntxt: {
             textAlign: "center",
-            fontWeight: "bold"
+            fontWeight: "600",
+            color: colors.txt
+        },
+        submitBtnTxt: {
+            textAlign: "center",
+            fontWeight: "bold",
+            color: "#FFF",
+            fontSize: 18
         },
         active: {
             backgroundColor: colors.accent
         },
-        inactive: {
-            backgroundColor: "grey"
+        inactiveBtn: {
+            backgroundColor: colors.compbgl,
+            borderColor: 'transparent'
         },
-        date:{ 
-            margin: "auto",
-            width: "max",
-            backgroundColor: colors.compbgl
-            
-        },
-        backdrop: {
-            width: wp(100),
-            height: hp(100),
-            position: "absolute",
-            backgroundColor: "rgba(0, 0, 0, 0.5)"
-        },
-        txtc: colors.txt
+        disabled: {
+            backgroundColor: "#A9A9A9",
+            shadowOpacity: 0
+        }
     });
-} 
+}
