@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Image } from "expo-image";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth } from "../../../firebase";
 import useStyles from "../../styles/auth/global";
@@ -31,34 +31,39 @@ export default function Login(){
     }
     return(
         <SafeAreaView style={globalstyle.bg}>
-            {/* <Text style={globalstyle.header}>Kin Board</Text> */}
-            <Image cachePolicy="disk" style={globalstyle.logo} source={require("../../../assets/images/logotb.png")}/>
-            <View>
-                <TextInput
-                    value={email}
-                    onChangeText={setEmail}
-                    placeholder="Email"
-                    style={globalstyle.txtinput}
-                    placeholderTextColor="black"
-                />
-                <TextInput
-                    value={password}
-                    onChangeText={setPassword}
-                    placeholder="Password"
-                    style={globalstyle.txtinput}
-                    secureTextEntry={true}
-                    autoComplete="current-password"
-                    placeholderTextColor="black"
-                />
-            </View>
-            <TouchableOpacity 
-            style={globalstyle.button}
-            onPress={signin}
-            ><Text style={globalstyle.buttontxt}>Sign in</Text></TouchableOpacity>
+            <KeyboardAvoidingView
+                behavior="padding"
+                style={{flex: 1}}
+            >
+                {/* <Text style={globalstyle.header}>Kin Board</Text> */}
+                <Image cachePolicy="disk" style={globalstyle.logo} source={require("../../../assets/images/logotb.png")}/>
+                <View>
+                    <TextInput
+                        value={email}
+                        onChangeText={setEmail}
+                        placeholder="Email"
+                        style={globalstyle.txtinput}
+                        placeholderTextColor="black"
+                    />
+                    <TextInput
+                        value={password}
+                        onChangeText={setPassword}
+                        placeholder="Password"
+                        style={globalstyle.txtinput}
+                        secureTextEntry={true}
+                        autoComplete="current-password"
+                        placeholderTextColor="black"
+                    />
+                </View>
+                <TouchableOpacity 
+                style={globalstyle.button}
+                onPress={signin}
+                ><Text style={globalstyle.buttontxt}>Sign in</Text></TouchableOpacity>
 
-            <TouchableOpacity
-                onPress={() => {nav.navigate("Signup")}}
-            ><Text style={[globalstyle.buttontxt, {color: "#FF6F61"}]}>Don't have a account?</Text></TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => {nav.navigate("Signup")}}
+                ><Text style={[globalstyle.buttontxt, {color: "#FF6F61"}]}>Don't have a account?</Text></TouchableOpacity>
+            </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }

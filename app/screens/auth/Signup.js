@@ -3,7 +3,7 @@ import { Image } from "expo-image";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { useState } from "react";
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { KeyboardAvoidingView, Text, TextInput, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { auth, db } from "../../../firebase";
 import useStyles from "../../styles/auth/global";
@@ -29,13 +29,22 @@ export default function Signup(){
                 });
             });
         } catch(e){
-            alert("There was a error");
-            console.log(e);
+            if(e.code == "auth/weak-password") {
+                alert("Too weak of a password!"); 
+                return;
+            }
+            alert(e.code);
+            console.log(e.code);
         }
     }
     return(
         <SafeAreaView style={globalstyle.bg}>
+             <KeyboardAvoidingView
+                            behavior="padding"
+                            style={{flex: 1}}
+            >
             <Image cachePolicy="disk" style={globalstyle.logo} source={require("../../../assets/images/logotb.png")}/>
+            
             <View>
                  <TextInput
                     value={name}
@@ -43,6 +52,9 @@ export default function Signup(){
                     placeholder="Name"
                     style={globalstyle.txtinput}
                     placeholderTextColor="black"
+                    returnKeyType="next"
+                    returnKeyLabel="next"
+                    
                 />
                 <TextInput
                     value={email}
@@ -70,6 +82,7 @@ export default function Signup(){
             <TouchableOpacity
                 onPress={() => {nav.goBack()}}
             ><Text style={[globalstyle.buttontxt, {color: globalstyle.txt}]}>Have a account?</Text></TouchableOpacity>
+        </KeyboardAvoidingView>
         </SafeAreaView>
     )
 }
