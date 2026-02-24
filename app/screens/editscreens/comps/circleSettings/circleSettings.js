@@ -105,7 +105,7 @@ export default function CircleSettings({id, circleData, memberData, colors}){
     }
     if(isOwner){
         return(
-            <View style={[style.container, {minHeight: hp(35)}]}>
+            <View style={[style.container, {minHeight: hp(25)}]}>
                 <View style={style.content}>
                     <View style={style.header}>
                         <TouchableOpacity
@@ -131,9 +131,9 @@ export default function CircleSettings({id, circleData, memberData, colors}){
                         <TouchableOpacity style={style.btn} onPress={() => {changeName()}}>
                             <Text style={style.btntxt}>Change Name</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={style.btn}>
+                        {/* <TouchableOpacity style={style.btn}>
                             <Text style={style.btntxt}>Remove User</Text>
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity style={style.btn} onPress={() => {deleteCircle()}}>
                             <Text style={style.btntxt}>Delete Circle</Text>
                         </TouchableOpacity>

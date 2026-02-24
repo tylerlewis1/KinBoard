@@ -94,25 +94,31 @@ export default function Chores(){
         if(item.item.lastdone != null){
             const dateObject = new Date(item.item.lastdone);
             const now = new Date();
+            const lastdonwUTC = Date.UTC(dateObject.getFullYear(), dateObject.getMonth(), dateObject.getDate());
+            const currentUTC = Date.UTC(now.getFullYear(), now.getMonth(), now.getDate());
+            const startOfYearUTC = Date.UTC(now.getFullYear(), 0, 1);
+            const nowDayOfYear = Math.floor((currentUTC - startOfYearUTC) / 86400000) + 1;
+            const lastDoneDayOfYear = Math.floor((lastdonwUTC - startOfYearUTC) / 86400000) + 1;
             const options = {
                 weekday: 'short', 
                 hour: 'numeric', 
                 minute: 'numeric',
                 hour12: true 
             };
+
             if(item.item.repeat == "Daily" && (dateObject.getDate() == now.getDate())){
                 done = true; 
-            }if(item.item.repeat == "Every Other Day" && (Number(now.getDate()) - Number(dateObject.getDate()) ) <= 2){
+            } else if(item.item.repeat == "Every Other Day" && (nowDayOfYear - lastDoneDayOfYear) <= 2){
                 done = true; 
-            }if(item.item.repeat == "Weekly" && (Number(now.getDate()) - Number(dateObject.getDate()) ) <= 7){
+            } else if(item.item.repeat == "Weekly" && (nowDayOfYear - lastDoneDayOfYear) <= 7){
                 done = true; 
-            }if(item.item.repeat == "Biweekly" && (Number(now.getDate()) - Number(dateObject.getDate()) ) <= 14){
+            } else if(item.item.repeat == "Biweekly" && (nowDayOfYear - lastDoneDayOfYear) <= 14){
                 done = true; 
-            }if(item.item.repeat == "Monthly" && (Number(now.getDate()) - Number(dateObject.getDate()) ) <= 30){
+            } else if(item.item.repeat == "Monthly" && (nowDayOfYear - lastDoneDayOfYear) <= 30){
                 done = true; 
-            }if(item.item.repeat == "6 Months" && (Number(now.getDate()) - Number(dateObject.getDate()) ) <= 181){
+            } else if(item.item.repeat == "6 Months" && (nowDayOfYear - lastDoneDayOfYear) <= 181){
                 done = true; 
-            }if(item.item.repeat == "Yearly" && (Number(now.getDate()) - Number(dateObject.getDate()) ) <= 365){
+            } else if(item.item.repeat == "Yearly" && (now.getFullYear() == dateObject.getFullYear())){
                 done = true; 
             }
             
